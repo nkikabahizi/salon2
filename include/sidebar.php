@@ -13,19 +13,8 @@
 					<li>
 						<a href="newbill.php">
 							<i class="icon-tasks"></i>
-							New bills
-							<?php
-							$f1 = "00:00:00";
-							$from = date('Y-m-d') . " " . $f1;
-							$t1 = "23:59:59";
-							$to = date('Y-m-d') . " " . $t1;
-							$result = mysqli_query($con, "SELECT * FROM Orders where orderDate Between '$from' and '$to'");
-							$num_rows1 = mysqli_num_rows($result); {
-								?>
-								<b class="label orange pull-right">
-									<?php echo htmlentities($num_rows1); ?>
-								</b>
-							<?php } ?>
+							New bill
+							
 						</a>
 					</li>
 					<li>

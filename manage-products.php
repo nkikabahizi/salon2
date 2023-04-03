@@ -10,11 +10,12 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$productname = $_POST['name'];
 		$productcompany = $_POST['company'];
 		$price = $_POST['price'];
-		$quantity=$_POST['quantity'];
+		$quantity = $_POST['quantity'];
 		$productdescription = $_POST['description'];
 		$availability = $_POST['availability'];
-		$salonid=$_SESSION['salonid'];
-		$productimage = $_FILES["productimage"]["name"];		
+		$salonid = $_SESSION['salonid'];
+		$productimage = $_FILES["productimage"]["name"];
+		$currentTime = date('d-m-Y h:i:s A', time());
 		//for getting product id
 		$query = mysqli_query($conn, "select max(ProductId) as pid from products");
 		$result = mysqli_fetch_array($query);
@@ -24,8 +25,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 			mkdir("productimages/" . $productid);
 		}
 		move_uploaded_file($_FILES["productimage"]["tmp_name"], "productimages/$productid/" . $_FILES["productimage"]["name"]);
-		$sql=mysqli_query($conn,"insert into products(Name,Category,Manufacture,Price,ExampleProfile,Quantity,Description,SalonId,Status) values('$productname','$category','$productcompany','$price','$productimage','$quantity','$productdescription','$salonid','$availability')");
-$_SESSION['msg']="Product Inserted Successfully !!";
+		$sql = mysqli_query($conn, "insert into products(Name,Category,Manufacture,Price,ExampleProfile,Quantity,Description,SalonId,Status,UpdationDates) values('$productname','$category','$productcompany','$price','$productimage','$quantity','$productdescription','$salonid','$availability','$currentTime')");
+		$_SESSION['msg'] = "Product Inserted Successfully !!";
 		$_SESSION['msg'] = "Product Inserted Successfully !!";
 
 	}
@@ -141,7 +142,7 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 													class="span8 tip" required>
 											</div>
 										</div>
-										
+
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Manufacture company</label>
 											<div class="controls">
@@ -165,7 +166,7 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 											<div class="controls">
 												<textarea name="description" placeholder="Enter Product Description"
 													rows="6" class="span8 tip">
-								</textarea>
+									</textarea>
 											</div>
 										</div>
 
@@ -174,8 +175,8 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Product Availability</label>
 											<div class="controls">
-												<select name="availability" id="productAvailability"
-													class="span8 tip" required>
+												<select name="availability" id="productAvailability" class="span8 tip"
+													required>
 													<option value="">Select</option>
 													<option value="In Stock">In Stock</option>
 													<option value="Out of Stock">Out of Stock</option>
@@ -212,26 +213,27 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 										class="datatable-1 table table-bordered table-striped	 display" width="100%">
 										<thead>
 											<tr>
-												
-												<th>ID</th>
+
+												<th>#</th>
 												<th>Name</th>
 												<th>Category</th>
 												<th>Brand</th>
+												<th>Unit Price</th>
 												<th>Quantity</th>
 												<th>Availability</th>
-												<th>CreationDates</th>
-												<th>Image</th>												
+												<th>Last Modified</th>
+												<th>Image</th>
 												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
 
-											<?php 
-											$salonid=$_SESSION['salonid'];
+											<?php
+											$salonid = $_SESSION['salonid'];
 											$query = mysqli_query($conn, "select * from products WHERE SalonId = '$salonid' ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
-												$pid=$row['ProductId'];
+												$pid = $row['ProductId'];
 												?>
 												<tr>
 													<td>
@@ -247,20 +249,25 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 														<?php echo htmlentities($row['Manufacture']); ?>
 													</td>
 													<td>
+														<?php echo htmlentities($row['Price'])."RWF"; ?>
+													</td>
+													<td>
 														<?php echo htmlentities($row['Quantity']); ?>
 													</td>
 													<td>
 														<?php echo htmlentities($row['Status']); ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['CreationDates']); ?>
+														<?php echo htmlentities($row['UpdationDates']); ?>
 													</td>
 													<td>
-													<img src="productimages/<?php echo htmlentities($pid);?>/<?php echo htmlentities($row['ExampleProfile']);?>" width="200" height="100">
-														
+														<img src="productimages/<?php echo htmlentities($pid); ?>/<?php echo htmlentities($row['ExampleProfile']); ?>"
+															width="200" height="100">
+
 													</td>
 													<td>
-														<a href="edit-products.php?id=<?php echo $row['ProductId'] ?>"><i
+														<a
+															href="edit-products.php?id=<?php echo $row['ProductId'] ?>&frompage=manage-products.php"><i
 																class="icon-edit"></i></a>
 														<a href="category.php?id=<?php echo $row['ProductId'] ?>&del=delete"
 															onClick="return confirm('Are you sure you want to delete?')"><i

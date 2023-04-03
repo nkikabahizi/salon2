@@ -5,19 +5,20 @@ if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
 	$pid = intval($_GET['id']); // product id
+	$frompage = $_GET['frompage'];
 	if (isset($_POST['submit'])) {
 		$category = $_POST['category'];
-		$subcat = $_POST['subcategory'];
 		$productname = $_POST['productName'];
 		$productcompany = $_POST['productCompany'];
 		$productprice = $_POST['productprice'];
-		$productpricebd = $_POST['productpricebd'];
 		$productdescription = $_POST['productDescription'];
-		$productscharge = $_POST['productShippingcharge'];
 		$productavailability = $_POST['productAvailability'];
-
-		$sql = mysqli_query($conn, "update  products set category='$category',subCategory='$subcat',productName='$productname',productCompany='$productcompany',productPrice='$productprice',productDescription='$productdescription',shippingCharge='$productscharge',productAvailability='$productavailability',productPriceBeforeDiscount='$productpricebd' where id='$pid' ");
+		$currentTime = date('d-m-Y h:i:s A', time());
+		$sql = mysqli_query($conn, "update  products set Category='$category',Name='$productname',Manufacture='$productcompany',Price='$productprice',Description='$productdescription',Status='$productavailability', UpdationDates= '$currentTime' WHERE ProductId='$pid' ");
 		$_SESSION['msg'] = "Product Updated Successfully !!";
+		header("location:$frompage");
+
+
 
 	}
 
@@ -146,7 +147,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<label class="control-label" for="basicinput">Price
 												</label>
 												<div class="controls">
-													<input type="text" name="productpricebd" placeholder="Enter Product Price"
+													<input type="text" name="productprice" placeholder="Enter Product Price"
 														value="<?php echo htmlentities($row['Price']); ?>" class="span8 tip"
 														required>
 												</div>
@@ -158,8 +159,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<div class="controls">
 													<textarea name="productDescription" placeholder="Enter Product Description"
 														rows="6" class="span8 tip">
-				<?php echo htmlentities($row['Description']); ?>
-				</textarea>
+						<?php echo htmlentities($row['Description']); ?>
+						</textarea>
 												</div>
 											</div>
 
@@ -168,8 +169,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<div class="controls">
 													<select name="productAvailability" id="productAvailability"
 														class="span8 tip" required>
-														<option
-															value="<?php echo htmlentities($row['Status']); ?>">
+														<option value="<?php echo htmlentities($row['Status']); ?>">
 															<?php echo htmlentities($row['Status']); ?></option>
 														<option value="In Stock">In Stock</option>
 														<option value="Out of Stock">Out of Stock</option>
@@ -184,13 +184,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<div class="controls">
 													<img src="productimages/<?php echo htmlentities($pid); ?>/<?php echo htmlentities($row['ExampleProfile']); ?>"
 														width="200" height="100"> <a
-														href="update-image.php?id=<?php echo $row['ProductId']; ?>">Change Image</a>
+														href="update-image.php?id=<?php echo $row['ProductId']; ?>">Change
+														Image</a>
 												</div>
 											</div>
 
 
 
-											
+
 										<?php } ?>
 										<div class="control-group">
 											<div class="controls">

@@ -15,7 +15,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Admin| Pending Orders</title>
+		<title>HDSMS| new bill</title>
 		<link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -68,6 +68,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 										</thead>
 										<tbody>
+											
 
 											<?php
 											$salonid = $_SESSION['salonid'];
@@ -96,13 +97,17 @@ if (strlen($_SESSION['alogin']) == 0) {
 															<h3>
 																Price
 															</h3>
-															<?php echo $row['Price']; ?>RWF
+															<form method="GET" action="addproducts.php">
+															<input type="hidden" value="<?php echo $sid; ?>" class="span2" name="serviceid">
+
+															<input type="number" value="<?php echo $row['Price']; ?>" class="span2" name="price">
 														</div>
 													</td>
 													<td>
 													<div class="module-head">
 															
-															<a href="addproducts.php?serviceid=<?php echo $sid; ?>"> <button class="btn btn-primary">Provide</button> </a>
+															<button type="submit"class="btn btn-primary">Provide</button> </a>
+											</form>
 														</div>
 													</td>
 												</tr>
