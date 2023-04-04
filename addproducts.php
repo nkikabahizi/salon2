@@ -15,7 +15,7 @@ if (strlen($_SESSION['alogin']) == 0) {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Admin| Pending Orders</title>
+        <title>HDSMS| New bill</title>
         <link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -159,6 +159,11 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     $products=$_POST['products'];
                                     $cnt=0;
                                     $totalproducts=0;
+                                    echo "<form method='GET' action='addproducts.php'>";
+                                    echo "<input type='text' value=".$_GET['price']." class='span2 tip' name='price'>";
+                                    echo "<input type='text' value=".$_GET['serviceid']." class='span2 tip' name='serviceid'>";
+
+
                                     foreach ($products as $products) {
                                         $selectproducts = mysqli_query($conn, "SELECT Name,Quantity,Price,ProductId FROM products WHERE ProductId =$products");
                                         $row = mysqli_fetch_array($selectproducts);
@@ -170,8 +175,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <tr>
                                             <td><?php echo $cnt; ?></td>
                                             <td><b><?php echo $row['Name']; ?></b></td>
-                                            <td><b><?php echo $row['Price']; ?>RWF</b></td>
-                                         <form method='POST'>
+                                            <td><b><?php echo $row['Price']; ?>RWF</b></td>                                           
+                                            
                                             <td><input type="number" value="1" class="span2 tip" name="quantity[<?php echo $pid; ?>]"></td>
 
                                         </tr>
@@ -181,22 +186,20 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     <?php }
                                     ?>
                                     </table>
-                                    <button class='btn btn-primary' type='submit' name='savebill'>Save bill</button>
+                                    <button class='btn btn-primary' type='submit' value="savebill" name="savebill">Save bill</button>
                                     </form>
 
-
-
                                     <?php 
-                                    if(isset($_POST['savebill']))
+                                    if(isset($_GET['savebill']))
                                     {
-                                        $quantity=$_POST['quantity'];
+                                        $quantity=$_GET['quantity'];
                                         $servicefee=$_GET['price'];
                                         $serviceid=$_GET['serviceid'];
                                         $salonid=$_SESSION['salonid'];
-                                        $save=mysqli_query($conn, "INSERT INTO billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,Description,SalonId) VALUES ('$serviceid', '$servicefee', '$totalproducts', '1', 'hey','$salonid')");
+                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId ,Description,SalonId) values('$serviceid','$servicefee','$totalproducts','0',' ','$salonid')");
                                         if($save == 1)
                                         {
-                                            $_SESSION['msg'] = "Product Inserted Successfully !!";
+                                            $_SESSION['msg'] = "bill saved Successfully !!";
                                         }
                                         else
                                         {
