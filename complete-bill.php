@@ -70,20 +70,22 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 <br />
                                 <div>
                                     <table>
-                                        <h1>Tarrif</h1>
+                                        <h1>Products to bill</h1>
                                         <thead>
                                             <th>#</th>
                                             <th>Name</th>
                                             <th></th>
                                             <th>Price</th>
-                                            <th>Instock</th>
+                                            <th>quantity</th>
 
                                         </thead>
                                         <tbody>
 
                                             <?php
                                             $salonid = $_SESSION['salonid'];
-                                            $query = mysqli_query($conn, "select * FROM products where SalonId = '$salonid' AND Status = 'In Stock'");
+                                            $products=$_GET['products'];
+                                            $serviceid=$_GET['serviceid'];
+                                            $query = mysqli_query($conn, "select * FROM products where SalonId = '$salonid' AND ProductId  'In Stock'");
                                             $cnt = 1;
                                             while ($row = mysqli_fetch_array($query)) {
                                                 $pid = $row['ProductId'];
@@ -118,9 +120,13 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 <?php } ?>
                                 </form>
                                 </table>
-                                <form method="POST">
+                                <form method="GET" action="complete-bill.php">
+                                    <input type="text" name="serviceid" value="<?php echo $serviceid;  ?>">
+                                    <input type="text" name="servicefee" value="<?php echo $_GET['price'];  ?>">
+
                                     <select data-placeholder="Choose products" class="chosen-select" multiple tabindex="4"
-                                        name="products[]">                                 
+                                        name="products[]">
+                                  
 
 
                                         <?php
@@ -140,92 +146,32 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                     
                                     </select>
-                                        <button class='btn btn-success' type='submit' name='save'>Continue</button>
+                                        <button class='btn btn-success' type='submit'>Continue</button>
                                 </form>
-                                <?php 
-                                if(isset($_POST['save']))
-                                {
-                                    echo "<table
-                                    <thead>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Unit price</th>
-                                        <th>Quantity</th>
-                                    </thead>
-                                    <tbody>";
-                                    
-
-                                    $products=$_POST['products'];
-                                    $cnt=0;
-                                    $totalproducts=0;
-                                    echo "<form method='POST'>";
-                                    echo "<input type='number' value=".$_GET['price']." class='span2 tip' name='price'>";
-
-                                    foreach ($products as $products) {
-                                        $selectproducts = mysqli_query($conn, "SELECT Name,Quantity,Price,ProductId FROM products WHERE ProductId =$products");
-                                        $row = mysqli_fetch_array($selectproducts);
-                                        $cnt=$cnt + 1;                                        
-                                        
-                                        $totalproducts = $totalproducts + $row['Price'];
-                                        $pid=$row['ProductId'];
-
-                                       
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $cnt; ?></td>
-                                            <td><b><?php echo $row['Name']; ?></b></td>
-                                            <td><b><?php echo $row['Price']; ?>RWF</b></td>                                           
-                                            <input type="number" value="<?php echo $totalproducts; ?>" class="span2 tip" name="totalproducts"></td>
-                                            <input type="text" name='total' value="<?php echo $totalproducts; ?>">
-                                            <td><input type="number" value="1" class="span2 tip" name="quantity[<?php echo $pid; ?>]"></td>
-
-                                        </tr>
-                                        
-
-                                    
-                                    <?php }
-                                    ?>
-                                    </table>
-                                    <button class='btn btn-primary' type='submit' name="savebill">Save bill <?php echo $totalproducts;  ?></button>
-                                    </form>
+                                
 
                                     <?php 
-                                }
-                                    if(isset($_POST['savebill']))
+                                    if(isset($_GET['savebill']))
                                     {
-                                        $quantity=$_POST['quantity'];
-                                        $servicefee=$_POST['price'];
+                                        $quantity=$_GET['quantity'];
+                                        $servicefee=$_GET['price'];
                                         $serviceid=$_GET['serviceid'];
-                                        $salonid=$_SESSION['salonid'];       
-                                        $total=$_POST['total'];                                 
-                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,Description,SalonId) values ('$serviceid','$servicefee','$total','1',' ','$salonid')");
+                                        $salonid=$_SESSION['salonid'];
+                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId ,Description,SalonId) values('$serviceid','$servicefee','$totalproducts','0',' ','$salonid')");
                                         if($save == 1)
                                         {
-                                        $billingid = $conn->insert_id;  
-                                        foreach ($quantity as $product => $qty) {
-                                            $savebillinfo = mysqli_query($conn,"insert into billinginfo(BillingId,ProductId,Quantity) values ('$billingid','$product','$qty')");
-                                            
-                                        }                                  
-                                        
-                                        if($savebillinfo == 1)
-                                        {
-                                         echo "<script> alert('saved') </script>";
-
+                                            $_SESSION['msg'] = "bill saved Successfully !!";
                                         }
                                         else
                                         {
                                             echo mysqli_error($conn);
                                         }
-                                            
-                                        }
-                                        else
-                                        {
-                                            echo mysqli_error($conn);
-                                        }
+                                        $billid=$conn->insertid();
 
 
-                                    }    
-                                                           
+                                    }
+
+                                }
                                 ?>
                             
                             
@@ -262,4 +208,3 @@ if (strlen($_SESSION['alogin']) == 0) {
         <script src="docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
         <script src="docsupport/init.js" type="text/javascript" charset="utf-8"></script>
     </body>
-<?php } ?>
