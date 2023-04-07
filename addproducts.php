@@ -4,9 +4,7 @@ include('include/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
     header('location:index.php');
 } else {
-    date_default_timezone_set('Asia/Kolkata'); // change according timezone
-    $currentTime = date('d-m-Y h:i:s A', time());
-
+   
 
     ?>
     <!DOCTYPE html>
@@ -197,8 +195,12 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $servicefee=$_POST['price'];
                                         $serviceid=$_GET['serviceid'];
                                         $salonid=$_SESSION['salonid'];       
-                                        $total=$_POST['total'];                                 
-                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,CustomerId,Description,SalonId) values ('$serviceid','$servicefee','$total','0','0',' ','$salonid')");
+                                        $total=$_POST['total'];       
+		                                $date = date('d-m-Y', time());
+		                                $day = date('d', time());
+		                                $mon = date('m', time());
+		                                $year = date('Y', time());
+                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,CustomerId,Description,SalonId,Dates,Day,Mon,Year,Status  ) values ('$serviceid','$servicefee','$total','0','0',' ','$salonid','$date','$day','$mon','$year', '0')");
                                         if($save == 1)
                                         {
                                         $billingid = $conn->insert_id;  

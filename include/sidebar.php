@@ -14,16 +14,18 @@
 						<a href="newbill.php">
 							<i class="icon-tasks"></i>
 							New bill
-							
+
 						</a>
 					</li>
 					<li>
-						<a href="pending-orders.php">
+						<a href="today-bills.php">
 							<i class="icon-tasks"></i>
 							Today's' bills
 							<?php
-							$status = 'Delivered';
-							$ret = mysqli_query($con, "SELECT * FROM Orders where orderStatus!='$status' || orderStatus is null ");
+							$status = '1';
+							$today = date('d' ,time());
+
+							$ret = mysqli_query($conn, "SELECT * FROM billing where Status='$status' AND Day = '$today'");
 							$num = mysqli_num_rows($ret); { ?><b class="label orange pull-right">
 									<?php echo htmlentities($num); ?>
 								</b>
@@ -31,12 +33,13 @@
 						</a>
 					</li>
 					<li>
-						<a href="delivered-orders.php">
+						<a href="monthly-bills.php?mon=<?php echo date('m'); ?>">
 							<i class="icon-inbox"></i>
 							This month bills
 							<?php
-							$status = 'Delivered';
-							$rt = mysqli_query($con, "SELECT * FROM Orders where orderStatus='$status'");
+							$status = '1';
+							$mon=date('m');
+							$rt = mysqli_query($conn, "SELECT * FROM billing where Status='$status' AND Mon = '$mon' ");
 							$num1 = mysqli_num_rows($rt); { ?><b class="label green pull-right">
 									<?php echo htmlentities($num1); ?>
 								</b>
@@ -121,7 +124,7 @@
 						</a>
 					</li>
 					<li>
-						
+
 					</li>
 				</ul>
 

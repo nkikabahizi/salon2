@@ -128,7 +128,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 $name=$_POST['customername'];
                                 $phone=$_POST['phone'];
                                 $salonid=$_SESSION['salonid'];
-                                $saving=mysqli_query($conn, "INSERT INTO customers(FullName, PhoneNumber, SalonId) VALUES ('$name','$phone','$salonid')");
+                                $saving=mysqli_query($conn, "INSERT INTO customers(fullName, PhoneNumber, SalonId) VALUES ('$name','$phone','$salonid')");
                                 if ($saving == 1) 
                                 {
                                     $customerid=$conn -> insert_id;

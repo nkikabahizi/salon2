@@ -200,7 +200,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <?php
                                         } else {
                                             $customerid = $_GET['customerid'];
-                                            $selectcustomer = mysqli_query($conn, "SELECT FullName,PhoneNumber,CustomerId FROM customers WHERE CustomerId = $customerid");
+                                            $selectcustomer = mysqli_query($conn, "SELECT fullName,PhoneNumber,CustomerId FROM customers WHERE CustomerId = $customerid");
                                             $cust = mysqli_fetch_array($selectcustomer);
                                             ?>
                                             <div class="control-group">
@@ -255,7 +255,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $fee=$fees['ServiceFee'];
                                         $subpercentage=$fee * $jobpercentage;
                                         $percentage=$subpercentage / 100;
-                                        
+
                                         $savesalary=mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount, Status) VALUES ('$employeeid', '$percentage', '0')");
                                         
                                     }
