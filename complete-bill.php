@@ -49,19 +49,12 @@ if (strlen($_SESSION['alogin']) == 0) {
         <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
         <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
 
+        <link rel="stylesheet" href="chosen.css">
+        <link rel="stylesheet" href="docsupport/prism.css">
+        <link rel="stylesheet" href="chosen.css">
+
     </head>
-    <script>
-function getcustomerinfo(val) {
-	$.ajax({
-	type: "POST",
-	url: "get_customerinfo.php",
-	data:'customerid='+val,
-	success: function(data){
-		$("#phone").html(data);
-	}
-	});
-}
-</script>
+
 
     <body>
         <?php include('include/header.php'); ?>
@@ -100,13 +93,12 @@ function getcustomerinfo(val) {
 
                                     <br />
 
-                                    <form class="form-horizontal row-fluid" name="insertproduct" method="post"
-                                        enctype="multipart/form-data">
+                                    <form class="form-horizontal row-fluid" method="POST">
 
                                         <div class="control-group">
                                             <label class="control-label" for="basicinput">Employee</label>
                                             <div class="controls">
-                                                <select name="category" class="span8 tip" required>
+                                                <select name="employeeid" class="span8 tip" required>
                                                     <option value="">Select Employee</option>
                                                     <?php
                                                     $salonid = $_SESSION['salonid'];
@@ -126,7 +118,7 @@ function getcustomerinfo(val) {
                                             <div class="controls">
                                                 <textarea name="description" placeholder="Anything to describe ?" rows="6"
                                                     class="span8 tip">
-                                                                </textarea>
+                                                                                                            </textarea>
                                             </div>
                                         </div>
                                         <div class="module-head">
@@ -156,7 +148,7 @@ function getcustomerinfo(val) {
                                             <label class="control-label" for="basicinput">Total bill</label>
                                             <div class="controls">
                                                 <input type="number" name="totalbill" placeholder="Total bill"
-                                                    class="span8 tip" value="<?php echo  $totalbill; ?>" required disabled>
+                                                    class="span8 tip" value="<?php echo $totalbill; ?>" required disabled>
 
                                             </div>
                                         </div>
@@ -168,30 +160,40 @@ function getcustomerinfo(val) {
                                             <div class="control-group">
                                                 <label class="control-label" for="basicinput">Customer name</label>
                                                 <div class="controls">
-                                                <select name="category" class="span8 tip" required  onChange="getcustomerinfo(this.value);" >
-                                                    <option value="">Select customer</option>
-                                                    <?php
-                                                    $salonid = $_SESSION['salonid'];
-                                                    $selectcustomers = mysqli_query($conn, "SELECT FullName,CustomerId FROM customers WHERE SalonId = $salonid");
-                                                    while ($customer = mysqli_fetch_array($selectcustomers)) {
-                                                        ?>
-                                                        <option value="<?php echo $emp['CustomerId']; ?>"><?php echo $customer['FullName']; ?></option>
-
+                                                    <script>
+                                                        function getcustomerinfo(val) {
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "get_customerinfo.php",
+                                                                data: 'customerid=' + val,
+                                                                success: function (data) {
+                                                                    $("#hisphone").html(data);
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
+                                                    <select name="customerid" onChange="getcustomerinfo(this.value);"
+                                                        class="chosen-select span8 tip" multiple tabindex="4" name="products[]"
+                                                        data-placeholder="Choose Customer">
                                                         <?php
-                                                    }
-                                                    ?>
-                                                </select>
+                                                        $salonid = $_SESSION['salonid'];
+                                                        $selectcustomers = mysqli_query($conn, "SELECT FullName,CustomerId FROM customers WHERE SalonId = $salonid");
+                                                        while ($customer = mysqli_fetch_array($selectcustomers)) {
+                                                            ?>
+                                                            <option value="<?php echo $customer['CustomerId']; ?>"><?php echo $customer['FullName']; ?></option>
+
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </select>*new here? <a
+                                                        href='new-customer.php?billid=<?php echo $billid ?>'><button
+                                                            type="button" class='btn btn-primary'>New</button></a>
 
                                                 </div>
                                             </div>
 
 
-                                            <div class="control-group">
-                                                <label class="control-label" for="basicinput">Phone number</label>
-                                                <div class="controls">
-                                                    <input type="text" name="phone" id="phone" placeholder="Enter Product Name"
-                                                        class="span8 tip" required>
-                                                </div>
+                                            <div class="control-group" id="hisphone">
                                             </div>
 
 
@@ -213,6 +215,9 @@ function getcustomerinfo(val) {
                                             <div class="control-group">
                                                 <label class="control-label" for="basicinput">Phone number</label>
                                                 <div class="controls">
+                                                <input type="text" name="customerid" class="span8 tip"
+                                                        value="<?php echo $customerid ?>">
+
                                                     <input type="text" name="phone" class="span8 tip"
                                                         value="<?php echo $cust['PhoneNumber'] ?>" required>
                                                 </div>
@@ -224,20 +229,37 @@ function getcustomerinfo(val) {
 
                                         }
                                         ?>
-
-
-
-
-
-
                                         <div class="control-group">
                                             <div class="controls">
-                                                <button type="submit" name="submit" class="btn">Save payment</button>
-                                                <button type="submit" name="submit" class="btn btn-primary">Pay Now</button>
+                                                <button type="submit" name="savepayment" class="btn">Save payment</button>
+                                                <button type="submit" name="paynow" class="btn btn-primary">Pay Now</button>
+                                                *MoMo
 
                                             </div>
                                         </div>
                                     </form>
+                                    <?php 
+                                    if(isset($_POST['savepayment']))
+                                    {
+                                        $employeeid=$_POST['employeeid'];
+                                        $description=$_POST['description'];
+                                        $customerid=$_POST['customerid'];
+                                        $phone=$_POST['phone'];
+                                        $billid=$_GET['billid'];
+                                        $updatebill=mysqli_query($conn,"UPDATE billing SET EmployeeId='$employeeid' , CustomerId='$customerid', Description= '$description' WHERE BillingId='$billid'");
+                                        $selectcontract=mysqli_query($conn, "SELECT JobPercentage FROM contracts WHERE EmployeeId = $employeeid");
+                                        $contract=mysqli_fetch_array($selectcontract);
+                                        $jobpercentage=$contract['JobPercentage'];
+                                        $selectfee=mysqli_query($conn,"SELECT ServiceFee from billing WHERE BillingId = $billid");
+                                        $fees=mysqli_fetch_array($selectfee);
+                                        $fee=$fees['ServiceFee'];
+                                        $subpercentage=$fee * $jobpercentage;
+                                        $percentage=$subpercentage / 100;
+                                        
+                                        $savesalary=mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount, Status) VALUES ('$employeeid', '$percentage', '0')");
+                                        
+                                    }
+                                    ?>
                                 </div>
                             </div>
 
@@ -268,5 +290,9 @@ function getcustomerinfo(val) {
                 $('.dataTables_paginate > a:last-child').append('<i class="icon-chevron-right shaded"></i>');
             });
         </script>
+        <script src="docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
+        <script src="chosen.jquery.js" type="text/javascript"></script>
+        <script src="docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+        <script src="docsupport/init.js" type="text/javascript" charset="utf-8"></script>
     </body>
 <?php } ?>
