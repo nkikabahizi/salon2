@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('include/config.php');
-$employeeid = $_GET['employeeid'];
+$contractid = $_GET['id'];
 if (strlen($_SESSION['alogin']) == 0) {
     header('location:index.php');
 } else {
@@ -32,7 +32,7 @@ if (strlen($_SESSION['alogin']) == 0) {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Add contract</title>
+        <title>Edit contract</title>
         <link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -53,7 +53,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                             <div class="module">
                                 <div class="module-head">
-                                    <h3>New contract </h3>
+                                    <h3>Edit contract </h3>
                                 </div>
                                 <div class="module-body">
 
@@ -72,11 +72,17 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <button type="button" class="close" data-dismiss="alert">×</button>
                                             <strong>Oh snap!</strong>
                                             <?php echo htmlentities($_SESSION['delmsg']); ?>
-                                            <?php echo htmlentities($_SESSION['delmsg'] = ""); ?>
+                                            <?php echo htmlentities($_SESSION['delmsg'] = ""); 
+                                           
+                                            ?>
                                         </div>
                                     <?php } ?>
 
                                     <br />
+                                    <?php 
+                                     $selectcontract=mysqli_query($conn,"SELECT * FROM contracts WHERE ContractId = $contractid");
+                                     $current=mysqli_fetch_array($selectcontract);
+                                    ?>
 
                                     <form class="form-horizontal row-fluid" name="subcategory" method="post">
 
@@ -84,14 +90,14 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <label class="control-label" for="basicinput">Title</label>
                                             <div class="controls">
                                                 <input type="text" placeholder="Enter contract title" name="title"
-                                                    class="span8 tip" required>
+                                                    class="span8 tip" value="<?php echo $current['Tittle']; ?>" required>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label" for="basicinput">Payment frequency</label>
                                             <div class="controls">
                                                 <select name="frequency" class="span8 tip" required>
-                                                    <option value="">Select Methode</option>
+                                                    <option value="<?php echo $current['PaymentFrequency']?>"><?php echo $current['PaymentFrequency']."days"?></option>
                                                     <option value="15">15 days</option>
                                                     <option value="30">30 days</option>
                                                 </select>
@@ -100,7 +106,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <div class="control-group">
                                             <label class="control-label" for="basicinput">Job percentage</label>
                                             <div class="controls">
-                                                <input type="number" placeholder="Job percentage" name="percentage"
+                                                <input type="number" placeholder="Job percentage" name="percentage" value="<?php echo $current['JobPercentage']?>"
                                                     class="span3 tip" required>%
                                             </div>
                                         </div>
@@ -108,14 +114,14 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <label class="control-label" for="basicinput">Starting date</label>
                                             <div class="controls">
                                                 <input type="date" placeholder="Enter SubCategory Name" name="starting"
-                                                    class="span8 tip" required>
+                                                    class="span8 tip" required> * <?php echo $current['StartingDate']?>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label" for="basicinput">Ending dates</label>
                                             <div class="controls">
                                                 <input type="date" placeholder="Enter SubCategory Name" name="ending"
-                                                    class="span8 tip" required>
+                                                    class="span8 tip" required>* <?php echo $current['EndingDates']?>
                                             </div>
                                         </div>
                                         <?php 
@@ -193,93 +199,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                             ?>
 
-                            <div class="module">
-                                <div class="module-head">
-                                    <h3>Current contract</h3>
-                                </div>
-                                <div class="module-body table">
-                                    <table cellpadding="0" cellspacing="0" border="0"
-                                        class="datatable-1 table table-bordered table-striped	 display" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Title</th>
-                                                <th>Starting</th>
-                                                <th>Ending</th>
-                                                <th>frequency</th>
-                                                <th>JobPercentage</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            <?php
-
-                                            $query = mysqli_query($conn, "select * from contracts WHERE EmployeeId = $employeeid AND status!=0 ORDER BY ContractId desc");
-                                            $cnt = 1;
-                                            while ($row = mysqli_fetch_array($query)) {
-                                                $starting=$row['StartingDate'];
-                                                $ending=$row['EndingDates'];
-                                                ?>
-                                                <tr>
-                                                    <td>
-                                                        <?php echo htmlentities($cnt); ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo htmlentities($row['Tittle']); ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $starting; ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $ending; ?>
-                                                    </td>
-
-                                                    <td>
-                                                        <?php echo htmlentities($row['PaymentFrequency']); ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo htmlentities($row['JobPercentage']); ?>%
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        $from = new DateTime($starting);
-                                                       $now=date('Y-m-d');
-                                                        $today = new DateTime($now);
-                                                        $length = $row['Length'];
-                                                        $st='';
-
-                                                        $interval = $from->diff($today);
-                                                        $remaining= $interval->days;
-
-                                                        if($remaining < $length)
-                                                        {
-                                                            $st="Active";
-                                                        }
-                                                        else
-                                                        {
-                                                            $st="Terminated";
-                                                        }
-                                                        echo $st;
-
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <a href="edit-contract.php?id=<?php echo $row['ContractId'] ?>"><i
-                                                                class="icon-edit"></i></a>
-                                                        <a href="add-contract.php?id=<?php echo $row['ContractId'] ?>&del=delete&employeeid=<?php echo $employeeid; ?>#deletereason"
-                                                            onClick="return confirm('Are you sure you want to delete contract?')"><i
-                                                                class="icon-remove-sign"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <?php $cnt = $cnt + 1;
-                                            } ?>
-
-                                    </table>
-                                </div>
-                            </div>
+                          
 
 
 
