@@ -13,17 +13,9 @@ $statuss = $_GET['filter'];
 if (strlen($_SESSION['alogin']) == 0) {
     header('location:index.php');
 } else {
-    if (isset($_POST['submit'])) {
-        $category = $_POST['category'];
-        $subcat = $_POST['subcategory'];
-        $sql = mysqli_query($con, "insert into subcategory(categoryid,subcategory) values('$category','$subcat')");
-        $_SESSION['msg'] = "SubCategory Created !!";
-
-    }
-
     if (isset($_GET['del'])) {
-        mysqli_query($con, "delete from subcategory where id = '" . $_GET['id'] . "'");
-        $_SESSION['delmsg'] = "SubCategory deleted !!";
+        mysqli_query($conn, "delete from contracts where ContractId = '" . $_GET['id'] . "'");
+        $_SESSION['delmsg'] = "Contract deleted !!";
     }
 
     ?>
@@ -40,6 +32,9 @@ if (strlen($_SESSION['alogin']) == 0) {
         <link type="text/css" href="images/icons/css/font-awesome.css" rel="stylesheet">
         <link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
             rel='stylesheet'>
+        <link rel="stylesheet" href="chosen.css">
+        <link rel="stylesheet" href="docsupport/prism.css">
+        <link rel="stylesheet" href="chosen.css">
     </head>
 
     <body>
@@ -65,15 +60,51 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                            <button type="submit" class="btn btn-primary">Filter<span class="icon-filter"> </button>
+                                                <button type="submit" class="btn btn-primary">Filter<span
+                                                        class="icon-filter"> </button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
+                                <form method="GET" class="form-horizontal row-fluid" action="add-contract.php">
+                                    <div id="hisloan" class="control-group">
+                                        <label class="control-label" for="basicinput">New contract</label>
+                                        <div class="controls">
+
+                                            <select name="employeeid" onChange="getloaninfo(this.value);"
+                                                class="chosen-select span4 tip" multiple tabindex="4" name="employee"
+                                                data-placeholder="Choose employee">
+                                                <?php
+                                                $salonid = $_SESSION['salonid'];
+                                                $selectemployees = mysqli_query($conn, "SELECT * FROM employees WHERE SalonId = $salonid");
+                                                while ($employee = mysqli_fetch_array($selectemployees)) {
+                                                    ?>
+                                                    <option value="<?php echo $employee['EmployeeId']; ?>"><?php echo $employee['FullName']; ?></option>
+
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary">Add<span
+														class="icon-plus"> </button>
+
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+
                                 <div class="module-body table">
+
                                     <table cellpadding="0" cellspacing="0" border="0"
                                         class="datatable-1 table table-bordered table-striped	 display" width="100%">
-                                        <div class="module-head">  <container><?php if($statuss == 1){echo "<b>active contracts</b>";} elseif($statuss == 0){echo "<b>Terminated contracts</b>";} ?></div>
+                                        <div class="module-head">
+                                            <container>
+                                                <?php if ($statuss == 1) {
+                                                    echo "<b>active contracts</b>";
+                                                } elseif ($statuss == 0) {
+                                                    echo "<b>Terminated contracts</b>";
+                                                } ?>
+                                        </div>
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -116,13 +147,13 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                         <?php echo htmlentities($row['EndingDates']); ?>
                                                     </td>
                                                     <td>
-                                                        <?php echo htmlentities($row['JobPercentage'])."%"; ?>
+                                                        <?php echo htmlentities($row['JobPercentage']) . "%"; ?>
                                                     </td>
                                                     <td>
-                                                        <a href="edit-subcategory.php?id=<?php echo $row['ContractId'] ?>"><i
+                                                        <a href="edit-contract.php?id=<?php echo $row['ContractId'] ?>"><i
                                                                 class="icon-edit"></i></a>
-                                                        <a href="subcategory.php?id=<?php echo $row['ContractId'] ?>&del=delete"
-                                                            onClick="return confirm('Are you sure you want to delete?')"><i
+                                                        <a href="listcontracts.php?id=<?php echo $row['ContractId'] ?>&del=delete&filter=<?php echo $_GET['filter']; ?>"
+                                                            onClick="return confirm('beware of actions that are not rolled back, Are you sure you want to delete this contract?')"><i
                                                                 class="icon-remove-sign"></i></a>
                                                     </td>
                                                 </tr>
@@ -157,5 +188,9 @@ if (strlen($_SESSION['alogin']) == 0) {
                 $('.dataTables_paginate > a:last-child').append('<i class="icon-chevron-right shaded"></i>');
             });
         </script>
+        <script src="docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
+		<script src="chosen.jquery.js" type="text/javascript"></script>
+		<script src="docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+		<script src="docsupport/init.js" type="text/javascript" charset="utf-8"></script>
     </body>
 <?php } ?>

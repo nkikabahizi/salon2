@@ -15,12 +15,10 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$id = $_POST['id'];
 		$contacts = $_POST['contacts'];
 		$description = $_POST['description'];
-		$userid = $_SESSION['id'];
-		$salonid = $_SESSION['salonid'];
-		$sql = mysqli_query($conn, "insert into employees(FullName,Location,Contacts,IdNumber,Poste,Description,UserId,SalonId) values('$name','$location', '$contacts', '$id', '$role', '$description', '$userid', '$salonid')");
-		$employeeid = $conn->insert_id;
-		$_SESSION['msg'] = "New employee created !!";
-		echo "<script>window.location='add-contract.php?employeeid=$employeeid';</script>";
+        $employeeid=$_GET['id'];
+		$sql = mysqli_query($conn, "UPDATE employees set FullName = '$name',Location = '$location',Contacts = '$contacts',IdNumber = '$id',Poste = '$role',Description = '$description' ");
+		
+		$_SESSION['msg'] = "Information updated !!";
 
 	}
 
@@ -88,23 +86,18 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									<form class="form-horizontal row-fluid" name="Category" method="post">
 
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Salon Name</label>
-											<div class="controls">
+										
 												<?php
-												$salonid = $_SESSION['salonid'];
-												$salon = mysqli_query($conn, "SELECT Name FROM salon WHERE SalonId='$salonid'");
-												$num = mysqli_fetch_array($salon);
+												$employeeid = $_GET['id'];
+												$employees = mysqli_query($conn, "SELECT * FROM employees WHERE EmployeeId='$employeeid'");
+												$row = mysqli_fetch_array($employees);
 												?>
-												<input type="text" placeholder="Enter category Name" name="category"
-													class="span8 tip" disabled value="<?php echo $num['Name']; ?>">
-											</div>
-										</div>
+												
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Employee's Name</label>
 											<div class="controls">
 												<input type="text" placeholder="Enter employees Name" name="name"
-													class="span8 tip" required>
+													class="span8 tip" value="<?php echo $row['FullName']; ?>" required>
 											</div>
 										</div>
 
@@ -113,7 +106,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											<div class="controls">
 
 												<select type="text" name="role" class="span8 tip" required>
-													<option>Selecte role</option>
+													<option><?php echo $row['Poste'] ?></option>
 													<option>Hair dresser</option>
 													<option>Nail dresser</option>
 													<option>Make up specialist </option>
@@ -124,21 +117,21 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Id Number</label>
 											<div class="controls">
-												<input type="number" placeholder="Enter ID" name="id" class="span8 tip"
+												<input type="number" placeholder="Enter ID" name="id" value="<?php echo $row['IdNumber']; ?>" class="span8 tip"
 													required>
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Phone number</label>
 											<div class="controls">
-												<input type="number" placeholder="Enter contacts" name="contacts"
+												<input type="number" placeholder="Enter contacts" name="contacts"  value="<?php echo $row['Contacts']; ?>"
 													class="span8 tip" required>
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Location</label>
 											<div class="controls">
-												<input type="text" placeholder="Enter adress" name="location"
+												<input type="text" placeholder="Enter adress" name="location"  value="<?php echo $row['Location']; ?>"
 													class="span8 tip" required>
 											</div>
 										</div>
@@ -146,13 +139,15 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Description</label>
 											<div class="controls">
-												<textarea class="span8" name="description" rows="5"></textarea>
+												<textarea class="span8" name="description" rows="5" style="text-align:left">
+                                                <?php echo $row['Description']; ?>
+                                                </textarea>
 											</div>
 										</div>
 
 										<div class="control-group">
 											<div class="controls">
-												<button type="submit" name="submit" class="btn">Create</button>
+												<button type="submit" name="submit" class="btn">Save</button>
 											</div>
 										</div>
 									</form>
@@ -160,72 +155,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 							</div>
 
 
-							<div class="module">
-								<div class="module-head">
-									<h3>Manage Employees</h3>
-								</div>
-								<div class="module-body table">
-									<table cellpadding="0" cellspacing="0" border="0"
-										class="datatable-1 table table-bordered table-striped	 display" width="100%">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>ID</th>
-												<th>Names</th>
-												<th>Location</th>
-												<th>Contacts</th>
-												<th>Role</th>
-												<th>Registered on</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-
-											<?php
-											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select * from employees WHERE SalonId = '$salonid' ");
-											$cnt = 1;
-											while ($row = mysqli_fetch_array($query)) {
-												?>
-												<tr>
-													<td>
-														<?php echo htmlentities($cnt); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['IdNumber']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['FullName']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Location']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Contacts']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Poste']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['CreationDates']); ?>
-													</td>
-													<td>
-														<a href="edit-employee.php?id=<?php echo $row['EmployeeId'] ?>"><i
-																class="icon-edit"></i></a>
-														<a href="manage-employees.php?id=<?php echo $row['EmployeeId'] ?>&del=delete"
-															onClick="return confirm('Are you sure you want to delete?')"><i
-																class="icon-remove-sign"></i></a>
-													</td>
-												</tr>
-												<?php $cnt = $cnt + 1;
-											} ?>
-
-									</table>
-								</div>
-							</div>
-
-
-
+							
 						</div><!--/.content-->
 					</div><!--/.span9-->
 				</div>

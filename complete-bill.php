@@ -173,14 +173,14 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                         }
                                                     </script>
                                                     <select name="customerid" onChange="getcustomerinfo(this.value);"
-                                                        class="chosen-select span8 tip" multiple tabindex="4" name="products[]"
+                                                        class="chosen-select span8 tip" multiple tabindex="4" name="customer"
                                                         data-placeholder="Choose Customer">
                                                         <?php
                                                         $salonid = $_SESSION['salonid'];
-                                                        $selectcustomers = mysqli_query($conn, "SELECT FullName,CustomerId FROM customers WHERE SalonId = $salonid");
+                                                        $selectcustomers = mysqli_query($conn, "SELECT fullName,CustomerId FROM customers WHERE SalonId = $salonid");
                                                         while ($customer = mysqli_fetch_array($selectcustomers)) {
                                                             ?>
-                                                            <option value="<?php echo $customer['CustomerId']; ?>"><?php echo $customer['FullName']; ?></option>
+                                                            <option value="<?php echo $customer['CustomerId']; ?>"><?php echo $customer['fullName']; ?></option>
 
                                                             <?php
                                                         }

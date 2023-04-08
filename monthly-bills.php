@@ -94,19 +94,19 @@ if (strlen($_SESSION['alogin']) == 0) {
 										case '8':
 											$monthname = 'August';
 											break;
-											case '9':
-												$monthname = 'September';
-												break;
-											case '10':
-												$monthname = 'October';
-												break;
-											case '11':
-												$monthname = 'November';
-												break;
-											case '12':
-												$monthname = 'December';
-												break;
-		
+										case '9':
+											$monthname = 'September';
+											break;
+										case '10':
+											$monthname = 'October';
+											break;
+										case '11':
+											$monthname = 'November';
+											break;
+										case '12':
+											$monthname = 'December';
+											break;
+
 
 
 										default:
@@ -158,7 +158,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<?php
 
 									$mon = $_GET['mon'];
-									$total=0;
+									$total = 0;
 									$query = mysqli_query($conn, "select * FROM billing,customers,employees,services WHERE billing.CustomerId = customers.CustomerId AND billing.EmployeeId=employees.EmployeeId AND billing.ServiceId = services.ServiceId AND billing.Mon = $mon ORDER BY billing.BillingId DESC");
 									$cnt = 1;
 									while ($row = mysqli_fetch_array($query)) {
@@ -212,12 +212,22 @@ if (strlen($_SESSION['alogin']) == 0) {
 											</td>
 										</tr>
 
-										<?php $cnt = $cnt + 1; 
+										<?php $cnt = $cnt + 1;
 										$total = $totalbill + $total;
 									} ?>
-									<tr><td><b>Total bills</b></td>
-									<td></td><td></td><td></td><td><?php echo "<b>".$total ?></td><td></td><td></td><td></td><td></td>
-								</tr>
+									<tr>
+										<td><b>Total bills</b></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td>
+											<?php echo "<b>" . $total ?>
+										</td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
 								</tbody>
 							</table>
 						</div>

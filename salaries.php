@@ -15,20 +15,18 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$id = $_POST['id'];
 		$contacts = $_POST['contacts'];
 		$description = $_POST['description'];
-		$userid = $_SESSION['id'];
-		$salonid = $_SESSION['salonid'];
+		$userid=$_SESSION['id'];
+		$salonid=$_SESSION['salonid'];
 		$sql = mysqli_query($conn, "insert into employees(FullName,Location,Contacts,IdNumber,Poste,Description,UserId,SalonId) values('$name','$location', '$contacts', '$id', '$role', '$description', '$userid', '$salonid')");
-		$employeeid = $conn->insert_id;
-		$_SESSION['msg'] = "New employee created !!";
+		$employeeid = $conn->insert_id;				
+		$_SESSION['msg'] = "Category Created !!";
 		echo "<script>window.location='add-contract.php?employeeid=$employeeid';</script>";
 
 	}
 
 	if (isset($_GET['del'])) {
-		$employeeid = $_GET['id'];
-		$deletemployee = mysqli_query($conn, "DELETE FROM employees WHERE EmployeeId = $employeeid");
-		$_SESSION['delmsg'] = "employee deleted !!";
-
+		mysqli_query($con, "delete from category where id = '" . $_GET['id'] . "'");
+		$_SESSION['delmsg'] = "Category deleted !!";
 	}
 
 	?>
@@ -38,7 +36,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>HDSMS| employees</title>
+		<title>Admin| Category</title>
 		<link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -73,9 +71,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<?php } ?>
 
 
-									<?php if (isset($_GET['del'])) {
-
-										?>
+									<?php if (isset($_GET['del'])) { ?>
 										<div class="alert alert-error">
 											<button type="button" class="close" data-dismiss="alert">×</button>
 											<strong>Oh snap!</strong>
@@ -102,7 +98,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										</div>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Employee's Name</label>
-											<div class="controls">
+											<div class="controls">												
 												<input type="text" placeholder="Enter employees Name" name="name"
 													class="span8 tip" required>
 											</div>
@@ -111,8 +107,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Role</label>
 											<div class="controls">
-
-												<select type="text" name="role" class="span8 tip" required>
+												
+												<select type="text" name="role"
+													class="span8 tip" required>
 													<option>Selecte role</option>
 													<option>Hair dresser</option>
 													<option>Nail dresser</option>
@@ -123,21 +120,21 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Id Number</label>
-											<div class="controls">
-												<input type="number" placeholder="Enter ID" name="id" class="span8 tip"
-													required>
+											<div class="controls">												
+												<input type="number" placeholder="Enter ID" name="id"
+													class="span8 tip" required>
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Phone number</label>
-											<div class="controls">
+											<div class="controls">												
 												<input type="number" placeholder="Enter contacts" name="contacts"
 													class="span8 tip" required>
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Location</label>
-											<div class="controls">
+											<div class="controls">												
 												<input type="text" placeholder="Enter adress" name="location"
 													class="span8 tip" required>
 											</div>
@@ -181,8 +178,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 										</thead>
 										<tbody>
 
-											<?php
-											$salonid = $_SESSION['salonid'];
+											<?php 
+											$salonid=$_SESSION['salonid'];
 											$query = mysqli_query($conn, "select * from employees WHERE SalonId = '$salonid' ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
@@ -210,9 +207,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<?php echo htmlentities($row['CreationDates']); ?>
 													</td>
 													<td>
-														<a href="edit-employee.php?id=<?php echo $row['EmployeeId'] ?>"><i
+														<a href="edit-category.php?id=<?php echo $row['EmployeeId'] ?>"><i
 																class="icon-edit"></i></a>
-														<a href="manage-employees.php?id=<?php echo $row['EmployeeId'] ?>&del=delete"
+														<a href="category.php?id=<?php echo $row['EmployeeId'] ?>&del=delete"
 															onClick="return confirm('Are you sure you want to delete?')"><i
 																class="icon-remove-sign"></i></a>
 													</td>

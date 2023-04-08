@@ -97,9 +97,15 @@
 						</a>
 					</li>
 					<li>
-						<a href="pending-orders.php">
+						<a href="salaries.php">
 							<i class="icon-tasks"></i>
 							Manage salaries
+						</a>
+					</li>
+					<li>
+						<a href="loans.php?mon=<?php echo $mon; ?>#loans">
+							<i class="icon-tasks"></i>
+							Loans and Deductions
 						</a>
 					</li>
 				</ul>
