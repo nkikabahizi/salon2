@@ -11,7 +11,6 @@ if (strlen($_SESSION['alogin']) == 0) {
         $starting = $_POST['starting'];
         $ending = $_POST['ending'];
         $percentage = $_POST['percentage'];
-        $employeeid = $_GET['employeeid'];
         $cancel = '';
         $status = 1;
         //calculating days interval
@@ -20,8 +19,12 @@ if (strlen($_SESSION['alogin']) == 0) {
         $interval = $from->diff($to);
         $num_days = $interval->days;
 
-        $sql = mysqli_query($conn, "insert into contracts(Tittle,Length,PaymentFrequency,StartingDate,EndingDates,EmployeeId,JobPercentage,cancelreason,status) values('$title','$num_days', '$frequency', '$starting', '$ending' , '$employeeid', '$percentage', '$cancel', '$status')");
-        $_SESSION['msg'] = "contract Created !!";
+        $sql = mysqli_query($conn, "UPDATE contracts set Tittle= '$title',Length = '$num_days',PaymentFrequency = '$frequency', StartingDate = '$starting',EndingDates = '$ending' ,JobPercentage = '$percentage' WHERE ContractId = '$contractid' ");
+        $_SESSION['msg'] = "contract info Changed succesfully !!";
+        if(!$sql)
+        {
+            echo mysqli_error($conn);
+        }
     }
 
 
@@ -84,7 +87,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                      $current=mysqli_fetch_array($selectcontract);
                                     ?>
 
-                                    <form class="form-horizontal row-fluid" name="subcategory" method="post">
+                                    <form class="form-horizontal row-fluid" method="post">
 
                                         <div class="control-group">
                                             <label class="control-label" for="basicinput">Title</label>
@@ -124,84 +127,15 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                     class="span8 tip" required>* <?php echo $current['EndingDates']?>
                                             </div>
                                         </div>
-                                        <?php 
-                                        //check for existing contract
-                                        $selectcurrent=mysqli_query($conn,"SELECT * FROM contracts WHERE EmployeeId = $employeeid AND status != 0 ORDER BY ContractId DESC");
-                                        $found=mysqli_fetch_array($selectcurrent);
-                                        @$starting=$found['StartingDate'];
-                                        $from = new DateTime($starting);
-                                        $now=date('Y-m-d');
-                                         $today = new DateTime($now);
-                                         @$length = $found['Length'];
-
-                                         $interval = $from->diff($today);
-                                         $remaining= $interval->days;
-                                         $remaining= $remaining + 1;
-
-                                         if($remaining < $length)
-                                         {
-                                             $allowedstatus="Not untill the last contract isterminated";
-                                             $disabledadd="disabled";
-                                         }
-                                         else
-                                         {
-                                            $disabledadd='';
-                                             $allowedstatus="Allowed to add new contract";
-                                         }
-
-
-                                        
-                                        ?>
-
-
-
                                         <div class="control-group">
                                             <div class="controls">
-                                                <button type="submit" name="submit" class="btn" <?php echo $disabledadd ?>>Create</button>* <?php echo $allowedstatus; ?><span class="icon-arrow-down"></span>
+                                                <button type="submit" name="submit" class="btn">Save</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                            <?php
-                            if (isset($_GET['del'])) {
-                                $contract = $_GET['id'];
-                                if (isset($_POST['delete'])) {
-                                    $reason = $_POST['reason'];
-                                    $delete = mysqli_query($conn, "update contracts set status = 0,cancelreason = '$reason' where ContractId= '$contract'");
-                                    if ($delete = 1) {
-                                        echo "<script>window.alert('contract deleted');window.location='add-contract.php?employeeid=$employeeid';</script>";
-                                    }
-                                }
-
-                                echo "
-    <div class='module' id='deletereason'>
-    <div class='module-head'>
-        <h3>Delete contract?</h3>
-    </div>
-    <form class='form-horizontal row-fluid' method='post'>
-
-    <div class='control-group'>
-        <label class='control-label' for='basicinput'>reason</label>
-        <div class='controls'>
-        <textarea class='span4' name='reason' rows='5'></textarea>
-        </div>
-        <div class='controls'>
-                                                <button  type='submit' name='delete'  class='btn btn-danger span3'>Comfirm</button>
-                                            </div>
-    </div>
-    </form>
-    </div>
-    ";
-                                mysqli_query($con, "delete from subcategory where id = '" . $_GET['id'] . "'");
-                                $_SESSION['delmsg'] = "SubCategory deleted !!";
-                            }
-
-                            ?>
-
                           
-
-
 
                         </div><!--/.content-->
                     </div><!--/.span9-->
