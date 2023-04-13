@@ -39,7 +39,7 @@
 							<?php
 							$status = '1';
 							$mon=date('m');
-							$rt = mysqli_query($conn, "SELECT * FROM billing where Status='$status' AND Mon = '$mon' ");
+							$rt = mysqli_query($conn, "SELECT * FROM billing where Status!=0 AND Mon = '$mon' ");
 							$num1 = mysqli_num_rows($rt); { ?><b class="label green pull-right">
 									<?php echo htmlentities($num1); ?>
 								</b>
@@ -97,7 +97,8 @@
 						</a>
 					</li>
 					<li>
-						<a href="salaries.php">
+						
+						<a href="salaries.php?mon=<?php echo $mon; ?>">
 							<i class="icon-tasks"></i>
 							Manage salaries
 						</a>
@@ -118,7 +119,7 @@
 				</a>
 				<ul id="togglecustomers" class="collapse unstyled">
 					<li>
-						<a href="manage-employees.php">
+						<a href="new-customer.php?from=menu">
 							<i class="icon-tasks"></i>
 							New customer
 						</a>

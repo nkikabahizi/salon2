@@ -159,10 +159,11 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									$mon = $_GET['mon'];
 									$total = 0;
-									$query = mysqli_query($conn, "select * FROM billing,customers,employees,services WHERE billing.CustomerId = customers.CustomerId AND billing.EmployeeId=employees.EmployeeId AND billing.ServiceId = services.ServiceId AND billing.Mon = $mon ORDER BY billing.BillingId DESC");
+									$query = mysqli_query($conn, "select * FROM billing,customers,employees,services WHERE billing.ServiceId = services.ServiceId AND billing.CustomerId = customers.CustomerId AND billing.EmployeeId=employees.EmployeeId AND billing.Mon = $mon AND billing.Status!=0  ORDER BY billing.BillingId DESC");
 									$cnt = 1;
 									while ($row = mysqli_fetch_array($query)) {
 										$billid = $row['BillingId'];
+										$servicefee = $row['ServiceFee'];
 
 										?>
 										<tr>
@@ -179,14 +180,17 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<ul>
 
 													<?php
-													$totalbill = 0;
-													$selectproducts = mysqli_query($conn, "SELECT * FROM products,billinginfo WHERE billinginfo.ProductId=products.ProductId AND billinginfo.BillingId = '$billid' ");
-													while ($pro = mysqli_fetch_array($selectproducts)) {
-														$subtotal = $pro['Quantity'] * $pro['Price'];
-														$totalbill = $subtotal + $totalbill;
+													$selectbillinfo = mysqli_query($conn, "SELECT products.Price,products.Name,billinginfo.Quantity,products.ProductId FROM billinginfo,products WHERE products.ProductId=billinginfo.ProductId AND billinginfo.BillingId = '$billid' ");
+													$price = 0;
+													while ($billinfo = mysqli_fetch_array($selectbillinfo)) {
+														$productid = $billinfo['ProductId'];
+														$pricee = $billinfo['Price'] * $billinfo['Quantity'];
+														$price = $price + $pricee;
+
 														?>
 														<li>
-															<?php echo $pro['Name'] . "(" . $pro['Quantity'] . ")"; ?>
+															<?php echo $billinfo['Name'] . "(" . $billinfo['Quantity'] . ")"; ?>
+
 														</li>
 
 														<?php
@@ -196,7 +200,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 												</ul>
 											</td>
 											<td>
-												<?php echo $totalbill; ?>
+											<?php echo  $subprice= $price + $servicefee; ?>
+
 											</td>
 											<td>
 												<?php echo htmlentities($row['FullName']); ?>
@@ -207,21 +212,21 @@ if (strlen($_SESSION['alogin']) == 0) {
 											<td>
 												<?php echo $row['DateBill']; ?>
 											</td>
-											<td> <a href="updateorder.php?oid=<?php echo $billid; ?>" title="Update order"
-													target="_blank"><i class="icon-eye-open"></i></a>
-											</td>
+											<td> <a href="bill.php?billid=<?php echo $billid; ?>" title="Update order"
+															target="_blank"><i class="icon-eye-open"></i></a>
+													</td>
 										</tr>
 
 										<?php $cnt = $cnt + 1;
-										$total = $totalbill + $total;
-									} ?>
+												@$totalbill=$subprice + $totalbill;
+											} ?>
 									<tr>
 										<td><b>Total bills</b></td>
 										<td></td>
 										<td></td>
 										<td></td>
 										<td>
-											<?php echo "<b>" . $total ?>
+											<?php echo "<b>" . @$totalbill ?>
 										</td>
 										<td></td>
 										<td></td>

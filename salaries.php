@@ -15,10 +15,10 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$id = $_POST['id'];
 		$contacts = $_POST['contacts'];
 		$description = $_POST['description'];
-		$userid=$_SESSION['id'];
-		$salonid=$_SESSION['salonid'];
+		$userid = $_SESSION['id'];
+		$salonid = $_SESSION['salonid'];
 		$sql = mysqli_query($conn, "insert into employees(FullName,Location,Contacts,IdNumber,Poste,Description,UserId,SalonId) values('$name','$location', '$contacts', '$id', '$role', '$description', '$userid', '$salonid')");
-		$employeeid = $conn->insert_id;				
+		$employeeid = $conn->insert_id;
 		$_SESSION['msg'] = "Category Created !!";
 		echo "<script>window.location='add-contract.php?employeeid=$employeeid';</script>";
 
@@ -36,7 +36,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Admin| Category</title>
+		<title>HDSMS| Salaries</title>
 		<link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -57,7 +57,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 							<div class="module">
 								<div class="module-head">
-									<h3>New employee</h3>
+									<h3>Generate Payroll</h3>
 								</div>
 								<div class="module-body">
 
@@ -81,64 +81,39 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<?php } ?>
 
 									<br />
+									<script>
+										function getAllowance(val) {
+											$.ajax({
+												type: "POST",
+												url: "getallowance.php",
+												data: 'type=' + val,
+												success: function (data) {
+													$("#allowance").html(data);
+												}
+											});
+										}
+									</script>
 
-									<form class="form-horizontal row-fluid" name="Category" method="post">
+									<form class="form-horizontal row-fluid" name="Category" method="GET" action="payroll.php">
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Salon Name</label>
+											<label class="control-label" for="basicinput">Select Payment frequency</label>
 											<div class="controls">
-												<?php
-												$salonid = $_SESSION['salonid'];
-												$salon = mysqli_query($conn, "SELECT Name FROM salon WHERE SalonId='$salonid'");
-												$num = mysqli_fetch_array($salon);
-												?>
-												<input type="text" placeholder="Enter category Name" name="category"
-													class="span8 tip" disabled value="<?php echo $num['Name']; ?>">
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Employee's Name</label>
-											<div class="controls">												
-												<input type="text" placeholder="Enter employees Name" name="name"
-													class="span8 tip" required>
-											</div>
-										</div>
-
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Role</label>
-											<div class="controls">
-												
-												<select type="text" name="role"
-													class="span8 tip" required>
-													<option>Selecte role</option>
-													<option>Hair dresser</option>
-													<option>Nail dresser</option>
-													<option>Make up specialist </option>
+												<select type="text" name="type" class="span8 tip"
+													onChange="getAllowance(this.value)" id="type">
+													<option>Selecte Frequency</option>
+													<option value="1">1 Day Payments</option>
+													<option value="15">15 Days Payments</option>
+													<option value="30">30 Days Payments</option>
 												</select>
 											</div>
 										</div>
+										<div class="control-group" id="allowance">
 
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Id Number</label>
-											<div class="controls">												
-												<input type="number" placeholder="Enter ID" name="id"
-													class="span8 tip" required>
-											</div>
 										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Phone number</label>
-											<div class="controls">												
-												<input type="number" placeholder="Enter contacts" name="contacts"
-													class="span8 tip" required>
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Location</label>
-											<div class="controls">												
-												<input type="text" placeholder="Enter adress" name="location"
-													class="span8 tip" required>
-											</div>
-										</div>
+
+
+
 
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Description</label>
@@ -146,10 +121,25 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<textarea class="span8" name="description" rows="5"></textarea>
 											</div>
 										</div>
+										<div class="control-group">
+											<label class="control-label" for="basicinput">Compute Loans</label>
+											<div class="controls">
+											<input type="checkbox" name="loans" value="1">*all employees on payroll with loans will pay their percentages
+
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="basicinput">Computedeductions</label>
+											<div class="controls">
+												<input type="checkbox" name="deductions" value="1"> *all employees on payroll with deductions will be deducted
+											</div>
+										</div>
+
+
 
 										<div class="control-group">
 											<div class="controls">
-												<button type="submit" name="submit" class="btn">Create</button>
+												<button type="submit" class="btn">Generate</button>
 											</div>
 										</div>
 									</form>
@@ -157,67 +147,143 @@ if (strlen($_SESSION['alogin']) == 0) {
 							</div>
 
 
-							<div class="module">
+							<div class="module" id="salaries">
 								<div class="module-head">
-									<h3>Manage Employees</h3>
+								<?php
+									$mon = $_GET['mon'];
+									switch ($mon) {
+										case '1':
+											$monthname = 'January';
+											break;
+										case '2':
+											$monthname = 'February';
+											break;
+										case '3':
+											$monthname = 'March';
+											break;
+										case '4':
+											$monthname = 'April';
+											break;
+										case '5':
+											$monthname = 'May';
+											break;
+										case '6':
+											$monthname = 'June';
+											break;
+										case '7':
+											$monthname = 'July';
+											break;
+										case '8':
+											$monthname = 'August';
+											break;
+										case '9':
+											$monthname = 'September';
+											break;
+										case '10':
+											$monthname = 'October';
+											break;
+										case '11':
+											$monthname = 'November';
+											break;
+										case '12':
+											$monthname = 'December';
+											break;
+
+
+
+										default:
+											$mon = date('m');
+											break;
+									}
+									?>
+
+									<h3>Payment History of <?php echo $monthname;?></h3>
+									<form method='GET' action="salaries.php#salaries">
+										<div>
+											<div class="col-md-4">
+												<select name="mon" class="span3 tip" required>
+													<option value="">Select different month</option>
+													<option value="1">January</option>
+													<option value="2">February</option>
+													<option value="3">March</option>
+													<option value="4">April</option>
+													<option value="5">May</option>
+													<option value="6">June</option>
+													<option value="7">July</option>
+													<option value="8">August</option>
+													<option value="9">September</option>
+													<option value="10">October</option>
+													<option value="11">November</option>
+													<option value="12">December</option>
+												</select>
+											</div>
+											<div class="col-md-4">
+												<button type="submit" class="btn btn-primary">Filter<span
+														class="icon-filter"> </button>
+									</form>
 								</div>
+									</div>
+									</div>
 								<div class="module-body table">
 									<table cellpadding="0" cellspacing="0" border="0"
 										class="datatable-1 table table-bordered table-striped	 display" width="100%">
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>ID</th>
-												<th>Names</th>
-												<th>Location</th>
-												<th>Contacts</th>
-												<th>Role</th>
-												<th>Registered on</th>
+												<th>Dates</th>
+												<th>Description</th>
+												<th>Number of employees</th>
+												<th>Total PayOut</th>
+												<th>User</th>
 												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
 
-											<?php 
-											$salonid=$_SESSION['salonid'];
-											$query = mysqli_query($conn, "select * from employees WHERE SalonId = '$salonid' ");
+											<?php
+											$salonid = $_SESSION['salonid'];
+											$query = mysqli_query($conn, "select * from payroll,users WHERE payroll.UserId = users.UserId AND users.SalonId = $salonid AND payroll.Month = '$mon' ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
+												@$totalpayout=$totalpayout + $row['Amount'];
 												?>
 												<tr>
 													<td>
 														<?php echo htmlentities($cnt); ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['IdNumber']); ?>
+														<?php echo htmlentities($row['Dates']); ?>
+													</td>
+													<td>
+														<?php echo htmlentities($row['Description']); ?>
+													</td>
+													<td>
+														<?php echo htmlentities($row['EmployeesNumber']); ?>
+													</td>
+													<td>
+														<?php echo htmlentities($row['Amount'])." FRW"; ?>
 													</td>
 													<td>
 														<?php echo htmlentities($row['FullName']); ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['Location']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Contacts']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Poste']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['CreationDates']); ?>
-													</td>
-													<td>
-														<a href="edit-category.php?id=<?php echo $row['EmployeeId'] ?>"><i
-																class="icon-edit"></i></a>
-														<a href="category.php?id=<?php echo $row['EmployeeId'] ?>&del=delete"
-															onClick="return confirm('Are you sure you want to delete?')"><i
-																class="icon-remove-sign"></i></a>
+														<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
+																class="icon-eye-open"></i></a>
 													</td>
 												</tr>
 												<?php $cnt = $cnt + 1;
 											} ?>
+											
+										</tbody>
+										<tfoot>
+										<tr>
+											<td></td><td><b>Total Payouts</b></td><td></td><td></td><td><?php echo @$totalpayout ." RWF"; ?></td><td></td><td></td>
+
+											</tr>
+										</tfoot>
 
 									</table>
+									
 								</div>
 							</div>
 

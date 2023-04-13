@@ -81,7 +81,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                             <?php
                                             $salonid = $_SESSION['salonid'];
-                                            $query = mysqli_query($conn, "select * FROM products where SalonId = '$salonid' AND Status = 'In Stock'");
+                                            $query = mysqli_query($conn, "select * FROM products where SalonId = '$salonid' AND Status = 'In Stock' AND Quantity > 0");
                                             $cnt = 1;
                                             while ($row = mysqli_fetch_array($query)) {
                                                 $pid = $row['ProductId'];
@@ -184,7 +184,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     <?php }
                                     ?>
                                     </table>
-                                    <button class='btn btn-primary' type='submit' name="savebill">Save bill <?php echo $totalproducts;  ?></button>
+                                    <button class='btn btn-primary' type='submit' name="savebill">Save bill</button>
                                     </form>
 
                                     <?php 
@@ -205,11 +205,19 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         {
                                         $billingid = $conn->insert_id;  
                                         foreach ($quantity as $product => $qty) {
+                                            $selectquantity=mysqli_query($conn, "SELECT Quantity FROM products WHERE ProductId = $product");
+                                            $available=mysqli_fetch_array($selectquantity);
+                                            $insto=$available['Quantity'];
+                                            if($qty > $insto)
+                                            {
+                                                echo "<script> alert('The quantity is not available in stock, please purchase sales')</script>";
+                                            }
+                                            else{
                                             $savebillinfo = mysqli_query($conn,"insert into billinginfo(BillingId,ProductId,Quantity) values ('$billingid','$product','$qty')");
-                                            
+                                            }     
                                         }                                  
                                         
-                                        if($savebillinfo == 1)
+                                        if(@$savebillinfo == 1)
                                         {
                                          echo "<script>window.location='complete-bill.php?billid=$billingid' </script>";                                        
 

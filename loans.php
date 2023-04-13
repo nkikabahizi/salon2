@@ -107,6 +107,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 											</div>
 										</div>
+										<div id="hisloan" class="control-group">
+											<label class="control-label" for="basicinput">Payment percentage</label>
+											<div class="controls" id="hisloan">
+
+												<input type='text' name="percentage">%
+
+											</div>
+										</div>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Description</label>
 											<div class="controls">
@@ -130,7 +138,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 								$day = date('d');
 								$mon = date('m');
 								$year = date('Y');
-								$saveloan = mysqli_query($conn, "INSERT INTO loans(EmployeeId,Amount,Description,Day,Mon,Year) VALUES ('$employeeid', '$amount', '$description', '$day', '$mon', '$year')");
+								$percentage=$_POST['percentage'];
+								$saveloan = mysqli_query($conn, "INSERT INTO loans(EmployeeId,Amount,PercentagePayment,Description,Day,Mon,Year) VALUES ('$employeeid', '$amount', '$percentage', '$description', '$day', '$mon', '$year')");
 
 							}
 							?>
@@ -220,6 +229,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<th>#</th>
 												<th>Names</th>
 												<th>Amount</th>
+												<th>Percentages</th>
 												<th>Dates</th>
 												<th>Reason</th>
 												<th>Action</th>
@@ -246,6 +256,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<?php echo htmlentities($row['Amount'])."RWF"; ?>
 													</td>
 													<td>
+														<?php echo htmlentities($row['PercentagePayment'])."%"; ?>
+													</td>
+													<td>
 														<?php echo $row['Day'] . "-" . $row['Mon'] . "-" . $row['Year']; ?>
 													</td>
 													<td>
@@ -261,6 +274,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<?php $cnt = $cnt + 1;
 												$totalloans = $totalloans + $row['Amount'];
 											} ?>
+											<tfoot>
 											<tr>
 												<td></td>
 												<td><b>Total Loans</b></td>
@@ -268,7 +282,10 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<td></td>
 												<td></td>
 												<td></td>
+												<td></td>
+
 											</tr>
+											</tfoot>
 
 									</table>
 								</div>

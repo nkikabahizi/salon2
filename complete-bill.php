@@ -102,12 +102,30 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                     <option value="">Select Employee</option>
                                                     <?php
                                                     $salonid = $_SESSION['salonid'];
-                                                    $selectemployees = mysqli_query($conn, "SELECT FullName,EmployeeId FROM employees WHERE SalonId = $salonid");
+                                                    $selectemployees = mysqli_query($conn, "SELECT * FROM employees WHERE SalonId = $salonid");
                                                     while ($emp = mysqli_fetch_array($selectemployees)) {
-                                                        ?>
-                                                        <option value="<?php echo $emp['EmployeeId']; ?>"><?php echo $emp['FullName']; ?></option>
+                                                        $employeeid = $emp['EmployeeId'];
+                                                        //CHECK IF HAS ACTIVE CONTRACT                                                
+                                                        $selectcurrent = mysqli_query($conn, "SELECT * FROM contracts WHERE EmployeeId = $employeeid AND status != 0 ORDER BY ContractId DESC");
+                                                        $found = mysqli_fetch_array($selectcurrent);
+                                                        @$starting = $found['StartingDate'];
+                                                        $from = new DateTime($starting);
+                                                        $now = date('Y-m-d');
+                                                        $today = new DateTime($now);
+                                                        @$length = $found['Length'];
 
-                                                        <?php
+                                                        $interval = $from->diff($today);
+                                                        $remaining = $interval->days;
+                                                        $remaining = $remaining + 1;
+
+                                                        if ($remaining < $length) {
+                                                            ?>
+
+                                                            <option value="<?php echo $emp['EmployeeId']; ?>"><?php echo $emp['FullName']; ?></option>
+                                                            <?PHP
+
+                                                        } 
+                                                        
                                                     }
                                                     ?>
                                                 </select>
@@ -118,7 +136,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <div class="controls">
                                                 <textarea name="description" placeholder="Anything to describe ?" rows="6"
                                                     class="span8 tip">
-                                                                                                            </textarea>
+                                                                                                                                                        </textarea>
                                             </div>
                                         </div>
                                         <div class="module-head">
@@ -177,7 +195,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                         data-placeholder="Choose Customer">
                                                         <?php
                                                         $salonid = $_SESSION['salonid'];
-                                                        $selectcustomers = mysqli_query($conn, "SELECT fullName,CustomerId FROM customers WHERE SalonId = $salonid");
+                                                        $selectcustomers = mysqli_query($conn, "SELECT fullName,CustomerId FROM customers WHERE SalonId = $salonid AND Status != 0");
                                                         while ($customer = mysqli_fetch_array($selectcustomers)) {
                                                             ?>
                                                             <option value="<?php echo $customer['CustomerId']; ?>"><?php echo $customer['fullName']; ?></option>
@@ -207,7 +225,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                 <label class="control-label" for="basicinput">Customer</label>
                                                 <div class="controls">
                                                     <input type="text" name="customername" placeholder="Enter Product Name"
-                                                        class="span8 tip" value="<?php echo $cust['FullName'] ?>" required
+                                                        class="span8 tip" value="<?php echo $cust['fullName'] ?>" required
                                                         disabled>
 
                                                 </div>
@@ -215,7 +233,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <div class="control-group">
                                                 <label class="control-label" for="basicinput">Phone number</label>
                                                 <div class="controls">
-                                                <input type="text" name="customerid" class="span8 tip"
+                                                    <input type="hidden" name="customerid" class="span8 tip"
                                                         value="<?php echo $customerid ?>">
 
                                                     <input type="text" name="phone" class="span8 tip"
@@ -231,33 +249,74 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         ?>
                                         <div class="control-group">
                                             <div class="controls">
-                                                <button type="submit" name="savepayment" class="btn">Save payment</button>
+                                                <button type="submit" name="savepayment" class="btn">Save payment</button>*
+                                                Cash
                                                 <button type="submit" name="paynow" class="btn btn-primary">Pay Now</button>
                                                 *MoMo
 
                                             </div>
                                         </div>
                                     </form>
-                                    <?php 
-                                    if(isset($_POST['savepayment']))
-                                    {
-                                        $employeeid=$_POST['employeeid'];
-                                        $description=$_POST['description'];
-                                        $customerid=$_POST['customerid'];
-                                        $phone=$_POST['phone'];
-                                        $billid=$_GET['billid'];
-                                        $updatebill=mysqli_query($conn,"UPDATE billing SET EmployeeId='$employeeid' , CustomerId='$customerid', Description= '$description' WHERE BillingId='$billid'");
-                                        $selectcontract=mysqli_query($conn, "SELECT JobPercentage FROM contracts WHERE EmployeeId = $employeeid");
-                                        $contract=mysqli_fetch_array($selectcontract);
-                                        $jobpercentage=$contract['JobPercentage'];
-                                        $selectfee=mysqli_query($conn,"SELECT ServiceFee from billing WHERE BillingId = $billid");
-                                        $fees=mysqli_fetch_array($selectfee);
-                                        $fee=$fees['ServiceFee'];
-                                        $subpercentage=$fee * $jobpercentage;
-                                        $percentage=$subpercentage / 100;
+                                    <?php
+                                    if (isset($_POST['savepayment'])) {
+                                        $employeeid = $_POST['employeeid'];
+                                        $description = $_POST['description'];
+                                        $customerid = $_POST['customerid'];
+                                        $phone = $_POST['phone'];
+                                        $billid = $_GET['billid'];
+                                        $updatebill = mysqli_query($conn, "UPDATE billing SET EmployeeId='$employeeid' , CustomerId='$customerid', Description= '$description', Status = '1'  WHERE BillingId='$billid'");
+                                        $selectcontract = mysqli_query($conn, "SELECT * FROM contracts WHERE EmployeeId = $employeeid AND status != 0 ORDER BY ContractId DESC");
+                                        $contract = mysqli_fetch_array($selectcontract);
+                                        $jobpercentage = $contract['JobPercentage'];
+                                        $frequency = $contract['PaymentFrequency'];
+                                        $length = $contract['Length'];
 
-                                        $savesalary=mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount, Status) VALUES ('$employeeid', '$percentage', '0')");
+
+                                        $selectfee = mysqli_query($conn, "SELECT ServiceFee from billing WHERE BillingId = $billid");
+                                        $fees = mysqli_fetch_array($selectfee);
+                                        $fee = $fees['ServiceFee'];
+                                        $subpercentage = $fee * $jobpercentage;
+                                        $percentage = $subpercentage / 100;
+                                        $today = date("Y-m-d");
+                                        //select current salary
+                                        $selectsalary = mysqli_query($conn, "SELECT * FROM salaries WHERE EmployeeId = $employeeid ORDER BY SalaryId DESC");
+                                        $lastsalary = mysqli_fetch_array($selectsalary);
+                                        if (!empty($lastsalary)) {
+                                            $fromdate = $lastsalary['FromDate'];
+                                            $from = new DateTime($fromdate);
+                                            $now = new DateTime($today);
+                                            $interval = $from->diff($now);
+                                            $days = $interval->days;
+                                            $salaryid = $lastsalary['SalaryId'];
+                                            $currentamount = $lastsalary['Amount'];
+                                            if ($days < $length) {
+                                                $newamount = $currentamount + $percentage;
+                                                $updatesalary = mysqli_query($conn, "UPDATE salaries SET Amount = '$newamount' WHERE SalaryId = '$salaryid' ");
+
+                                            } else {
+                                                $savenewsalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate, Status) VALUES ('$employeeid', '$percentage', '$today', '0')");
+
+
+                                            }
+                                        } else {
+                                            $savesalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate, Status) VALUES ('$employeeid', '$percentage', '$today', '0')");
+
+                                        }
+
+                                        $a = mysqli_query($conn, "SELECT * FROM billinginfo WHERE BillingId = $billid");
+                                        while ($b = mysqli_fetch_array($a)) {
+                                            $pro = $b['ProductId'];
+                                            $quantity = $b['Quantity'];
+                                            $selectquantity = mysqli_query($conn, "SELECT Quantity FROM products WHERE ProductId = $pro");
+                                            $available = mysqli_fetch_array($selectquantity);
+                                            $insto = $available['Quantity'];
+                                            $remaining = $insto - $quantity;
+                                            $update = mysqli_query($conn, "UPDATE products SET Quantity = '$remaining' WHERE ProductId = $pro");
+                                        }
                                         
+                                      echo "<script> window.location='bill.php?billid=$billid'; </script>";
+
+
                                     }
                                     ?>
                                 </div>
