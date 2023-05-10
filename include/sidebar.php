@@ -125,7 +125,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="listcontracts.php?filter=1">
+						<a href="#">
 							<i class="icon-tasks"></i>
 							Used machine running
 						</a>

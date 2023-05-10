@@ -11,8 +11,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$price = $_POST['price'];
 		$description = $_POST['description'];
 		$availability = $_POST['availability'];
-		$salonid=$_SESSION['salonid'];
-		$serviceimage = $_FILES["serviceimage"]["name"];		
+		$salonid = $_SESSION['salonid'];
+		$serviceimage = $_FILES["serviceimage"]["name"];
 		//for getting product id
 		$query = mysqli_query($conn, "select max(ServiceId) as sid from services");
 		$result = mysqli_fetch_array($query);
@@ -22,11 +22,17 @@ if (strlen($_SESSION['alogin']) == 0) {
 			mkdir("serviceimage/" . $serviceid);
 		}
 		move_uploaded_file($_FILES["serviceimage"]["tmp_name"], "serviceimage/$serviceid/" . $_FILES["serviceimage"]["name"]);
-		$sql=mysqli_query($conn,"insert into services(Name,Category,Price,Description,ExampleProfile,SalonId,Status) values('$servicename','$category', '$price','$description','$serviceimage','$salonid','$availability')");
-$_SESSION['msg']="Product Inserted Successfully !!";
+		$sql = mysqli_query($conn, "insert into services(Name,Category,Price,Description,ExampleProfile,SalonId,Status) values('$servicename','$category', '$price','$description','$serviceimage','$salonid','$availability')");
+		$_SESSION['msg'] = "Product Inserted Successfully !!";
 		$_SESSION['msg'] = "Product Inserted Successfully !!";
 
 	}
+	if(isset($_GET['del']))
+	{
+			mysqli_query($conn,"delete from services where ServiceId = '".$_GET['id']."'");
+			$_SESSION['delmsg']="Service deleted !!";
+	}
+
 
 
 	?>
@@ -145,7 +151,7 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 											<div class="controls">
 												<textarea name="description" placeholder="Enter Product Description"
 													rows="6" class="span8 tip">
-								</textarea>
+									</textarea>
 											</div>
 										</div>
 
@@ -154,8 +160,8 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Service Availability</label>
 											<div class="controls">
-												<select name="availability" id="productAvailability"
-													class="span8 tip" required>
+												<select name="availability" id="productAvailability" class="span8 tip"
+													required>
 													<option value="">Select</option>
 													<option value="In Stock">Available</option>
 													<option value="Out of Stock">Out of service</option>
@@ -192,25 +198,25 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 										class="datatable-1 table table-bordered table-striped	 display" width="100%">
 										<thead>
 											<tr>
-												
+
 												<th>ID</th>
 												<th>Name</th>
 												<th>Category</th>
 												<th>Price</th>
 												<th>Description</th>
 												<th>Availability</th>
-												<th>Image</th>												
+												<th>Image</th>
 												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
 
-											<?php 
-											$salonid=$_SESSION['salonid'];
+											<?php
+											$salonid = $_SESSION['salonid'];
 											$query = mysqli_query($conn, "select * from services WHERE SalonId = '$salonid' ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
-												$sid=$row['ServiceId'];
+												$sid = $row['ServiceId'];
 												?>
 												<tr>
 													<td>
@@ -232,13 +238,14 @@ $_SESSION['msg']="Product Inserted Successfully !!";
 														<?php echo htmlentities($row['Status']); ?>
 													</td>
 													<td>
-													<img src="serviceimage/<?php echo htmlentities($sid);?>/<?php echo htmlentities($row['ExampleProfile']);?>" width="200" height="100">
-														
+														<img src="serviceimage/<?php echo htmlentities($sid); ?>/<?php echo htmlentities($row['ExampleProfile']); ?>"
+															width="200" height="100">
+
 													</td>
 													<td>
 														<a href="edit-service.php?id=<?php echo $row['ServiceId'] ?>"><i
 																class="icon-edit"></i></a>
-														<a href="category.php?id=<?php echo $row['ServiceId'] ?>&del=delete"
+														<a href="manage-services.php?id=<?php echo $row['ServiceId'] ?>&del=delete"
 															onClick="return confirm('Are you sure you want to delete?')"><i
 																class="icon-remove-sign"></i></a>
 													</td>

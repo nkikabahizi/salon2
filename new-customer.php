@@ -30,6 +30,11 @@ if (strlen($_SESSION['alogin']) == 0) {
         $_SESSION['msg'] = "Product Inserted Successfully !!";
 
     }
+	if(isset($_GET['del']))
+		  {
+		          mysqli_query($conn,"delete from customers where CustomerId = '".$_GET['id']."'");
+                  $_SESSION['delmsg']="customer deleted !!";
+		  }
 
 
     ?>

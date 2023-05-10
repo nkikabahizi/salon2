@@ -28,8 +28,13 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$sql = mysqli_query($conn, "insert into products(Name,Category,Manufacture,Price,ExampleProfile,Quantity,Description,SalonId,Status,UpdationDates) values('$productname','$category','$productcompany','$price','$productimage','$quantity','$productdescription','$salonid','$availability','$currentTime')");
 		$_SESSION['msg'] = "Product Inserted Successfully !!";
 		$_SESSION['msg'] = "Product Inserted Successfully !!";
-
 	}
+	if(isset($_GET['del']))
+		  {
+		          mysqli_query($conn,"delete from products where ProductId = '".$_GET['id']."'");
+                  $_SESSION['delmsg']="Product deleted !!";
+		  }
+
 
 
 	?>
@@ -39,7 +44,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Admin| Insert Product</title>
+		<title>HDSMS| manage Product</title>
 		<link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -221,7 +226,6 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<th>Unit Price</th>
 												<th>Quantity</th>
 												<th>Availability</th>
-												<th>Last Modified</th>
 												<th>Image</th>
 												<th>Action</th>
 											</tr>
@@ -257,9 +261,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 													<td>
 														<?php echo htmlentities($row['Status']); ?>
 													</td>
-													<td>
-														<?php echo htmlentities($row['UpdationDates']); ?>
-													</td>
+													
 													<td>
 														<img src="productimages/<?php echo htmlentities($pid); ?>/<?php echo htmlentities($row['ExampleProfile']); ?>"
 															width="200" height="100">
@@ -269,7 +271,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<a
 															href="edit-products.php?id=<?php echo $row['ProductId'] ?>&frompage=manage-products.php"><i
 																class="icon-edit"></i></a>
-														<a href="category.php?id=<?php echo $row['ProductId'] ?>&del=delete"
+														<a href="manage-products.php?id=<?php echo $row['ProductId']?>&del=delete"
 															onClick="return confirm('Are you sure you want to delete?')"><i
 																class="icon-remove-sign"></i></a>
 													</td>
