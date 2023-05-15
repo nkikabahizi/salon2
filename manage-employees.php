@@ -16,7 +16,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$description = $_POST['description'];
 		$userid = $_SESSION['id'];
 		$salonid = $_SESSION['salonid'];
-		$sql = mysqli_query($conn, "insert into employees(FullName,Location,Contacts,IdNumber,Poste,Description,UserId,SalonId) values('$name','$location', '$contacts', '$id', '$role', '$description', '$userid', '$salonid')");
+		$sql = mysqli_query($conn, "insert into employees(FullName,Location,Contacts,IdNumber,Poste,Description,UserId,SalonId,Status) values('$name','$location', '$contacts', '$id', '$role', '$description', '$userid', '$salonid', '1')");
 		$employeeid = $conn->insert_id;
 		$_SESSION['msg'] = "New employee created !!";
 		echo "<script>window.location='add-contract.php?employeeid=$employeeid';</script>";
