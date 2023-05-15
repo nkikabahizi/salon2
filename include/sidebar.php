@@ -24,8 +24,8 @@
 							<?php
 							$status = '1';
 							$today = date('d' ,time());
-
-							$ret = mysqli_query($conn, "SELECT * FROM billing where Status='$status' AND Day = '$today'");
+							$salonid=$_SESSION['salonid'];
+							$ret = mysqli_query($conn, "SELECT * FROM billing where Status='$status' AND Day = '$today' AND SalonId = '$salonid' ");
 							$num = mysqli_num_rows($ret); { ?><b class="label orange pull-right">
 									<?php echo htmlentities($num); ?>
 								</b>
@@ -39,7 +39,7 @@
 							<?php
 							$status = '1';
 							$mon=date('m');
-							$rt = mysqli_query($conn, "SELECT * FROM billing where Status!=0 AND Mon = '$mon' ");
+							$rt = mysqli_query($conn, "SELECT * FROM billing where Status!=0 AND Mon = '$mon' AND SalonId = '$salonid' ");
 							$num1 = mysqli_num_rows($rt); { ?><b class="label green pull-right">
 									<?php echo htmlentities($num1); ?>
 								</b>
