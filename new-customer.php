@@ -193,7 +193,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                     <td>
                                                         <a href="edit-customer.php?id=<?php echo $row['CustomerId'] ?>"><i
                                                                 class="icon-edit"></i></a>
-                                                        <a href="new-customer.php?id=<?php echo $row['CustomerId'] ?>&del=delete"
+                                                        <a href="new-customer.php?id=<?php echo $row['CustomerId'] ?>&del=delete&from=menu"
                                                             onClick="return confirm('Are you sure you want to delete this customer?')"><i
                                                                 class="icon-remove-sign"></i></a>
                                                     </td>

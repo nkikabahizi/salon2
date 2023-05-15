@@ -4,8 +4,7 @@ include('include/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
-	date_default_timezone_set('Asia/Kolkata'); // change according timezone
-	$currentTime = date('d-m-Y h:i:s A', time());
+	
 
 
 	if (isset($_POST['submit'])) {
@@ -24,12 +23,12 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 	}
 
-	if (isset($_GET['del'])) {
-		$employeeid = $_GET['id'];
-		$deletemployee = mysqli_query($conn, "DELETE FROM employees WHERE EmployeeId = $employeeid");
-		$_SESSION['delmsg'] = "employee deleted !!";
-
-	}
+	if(isset($_GET['del']))
+		  {
+			$id=$_GET['id'];
+		          mysqli_query($conn,"UPDATE employees SET Status = 0 WHERE EmployeeId = $id");
+                  $_SESSION['delmsg']="employee deleted !!";
+		  }
 
 	?>
 	<!DOCTYPE html>
@@ -183,7 +182,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 											<?php
 											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select * from employees WHERE SalonId = '$salonid' ");
+											$query = mysqli_query($conn, "select * from employees WHERE SalonId = '$salonid' AND Status != 0");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
 												?>
