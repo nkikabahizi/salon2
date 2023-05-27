@@ -138,7 +138,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                     
                                     </select>
-                                        <button class='btn btn-success' type='submit' name='save'>Continue</button>
+                                        <button class='btn btn-success' type='submit' name='save'>Continue</button> *WITH PRODUCTS
+                                        <button class='btn btn-success' type='submit' name='savewithoutproduct'>Save</button> *WITHOUT PRODUCTS
                                 </form>
                                 <?php 
                                 if(isset($_POST['save']))
@@ -234,7 +235,27 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         }
 
 
-                                    }    
+                                    }
+                                    if(isset($_POST['savewithoutproduct']))    
+                                    {
+                                        $servicefee=$_GET['price'];
+                                        $serviceid=$_GET['serviceid'];
+                                        $salonid=$_SESSION['salonid'];       
+                                        $total=$servicefee;       
+		                                $date = date('d-m-Y', time());
+		                                $day = date('d', time());
+		                                $mon = date('m', time());
+		                                $year = date('Y', time());
+                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,CustomerId,Description,SalonId,Dates,Day,Mon,Year,Status  ) values ('$serviceid','$servicefee','$total','0','0',' ','$salonid','$date','$day','$mon','$year', '0')");
+                                        if($save == 1)
+                                        {
+                                            $billingid = $conn->insert_id; 
+                                         echo "<script>window.location='complete-bill.php?billid=$billingid' </script>";                                        
+                                             
+                                        }
+
+
+                                    }
                                                            
                                 ?>
                             
