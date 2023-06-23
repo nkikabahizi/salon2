@@ -246,7 +246,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 						<div class="module" id="incomestatement">
 							<div class="module-head">
-								Income Statement
+								Income Statement in <?php echo $monthname; ?>
 							</div>
 
 						</div>
@@ -266,10 +266,19 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									<?php
 									$salonid = $_SESSION['salonid'];
-									$query = mysqli_query($conn, "select Amount from payroll,users WHERE payroll.UserId = users.UserId AND users.SalonId = $salonid AND payroll.Month = '$mon' ");
+									$selectpurchase = mysqli_query($conn, "select UnitPrice,Quantity from purchases WHERE Mon = '$mon' AND Salonid = '$salonid' ");
 									$cnt = 1;
-									while ($row = mysqli_fetch_array($query)) {
-										@$totalpayout = $totalpayout + $row['Amount'];
+									$totalpurchase = 0;
+									while ($row = mysqli_fetch_array($selectpurchase)) {
+										$subtotal = $row['UnitPrice'] * $row['Quantity'];
+										@$totalpurchase = $totalpurchase + $subtotal;
+									}
+									$selectbilling = mysqli_query($conn, "select ServiceFee,TotalProducts from billing WHERE Mon = '$mon' AND Salonid = '$salonid'");
+									$cnt = 1;
+									$totalbilling = 0;
+									while ($row = mysqli_fetch_array($selectbilling)) {
+										$subtotal = $row['ServiceFee'] * $row['TotalProducts'];
+										@$totalbilling = $totalbilling + $subtotal;
 									}
 										?>
 										<tr>
@@ -278,16 +287,16 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<?php echo $monthname; ?>
 											</td>
 											<td>
-												<?php echo htmlentities($row['Description']); ?>
+												<?php echo $totalpurchase; ?>
 											</td>
 											<td>
-												<?php echo htmlentities($row['EmployeesNumber']); ?>
+												<?php echo $totalbilling. "RWF"; ?>
 											</td>
 											<td>
-												<?php echo $totalsalaries." FRW"; ?>
+												<?php echo $totalsalaries." RWF"; ?>
 											</td>
 											<td>
-												<?php echo htmlentities($row['FullName']); ?>
+												<?php echo $netincome= $totalbilling - $totalpurchase - $totalsalaries."RWF" ;?>
 											</td>
 											<td>
 												<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
