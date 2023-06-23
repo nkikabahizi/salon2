@@ -2256,7 +2256,7 @@ table th[class*="span"],
 }
 
 .table-hover tbody tr.warning:hover>td {
-    background-color: #
+    background-color: #faf2cc
 }
 
 .table-hover tbody tr.info:hover>td {
