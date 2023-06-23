@@ -18,7 +18,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$userid = $_SESSION['id'];
 		$salonid = $_SESSION['salonid'];
 		$sql = mysqli_query($conn, "insert into employees(FullName,Location,Contacts,IdNumber,Poste,Description,UserId,SalonId) values('$name','$location', '$contacts', '$id', '$role', '$description', '$userid', '$salonid')");
-		$employeeid = $conn->insert_id;
+		@$employeeid = $conn->insert_id;
 		$_SESSION['msg'] = "Category Created !!";
 		echo "<script>window.location='add-contract.php?employeeid=$employeeid';</script>";
 
@@ -67,7 +67,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <p class="lead">
                                             
                                         </p>
-                                        
+
                                     </div>
 
 									<?php if (isset($_POST['submit'])) { ?>

@@ -204,7 +204,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,CustomerId,Description,SalonId,Dates,Day,Mon,Year,Status  ) values ('$serviceid','$servicefee','$total','0','0',' ','$salonid','$date','$day','$mon','$year', '0')");
                                         if($save == 1)
                                         {
-                                        $billingid = $conn->insert_id;  
+                                        @$billingid = $conn->insert_id;  
                                         foreach ($quantity as $product => $qty) {
                                             $selectquantity=mysqli_query($conn, "SELECT Quantity FROM products WHERE ProductId = $product");
                                             $available=mysqli_fetch_array($selectquantity);
@@ -249,7 +249,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,CustomerId,Description,SalonId,Dates,Day,Mon,Year,Status  ) values ('$serviceid','$servicefee','$total','0','0',' ','$salonid','$date','$day','$mon','$year', '0')");
                                         if($save == 1)
                                         {
-                                            $billingid = $conn->insert_id; 
+                                            @$billingid = $conn->insert_id; 
                                          echo "<script>window.location='complete-bill.php?billid=$billingid' </script>";                                        
                                              
                                         }
