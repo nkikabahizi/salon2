@@ -2,7 +2,7 @@
 	<div class="sidebar">
 
 
-		<ul class="widget widget-menu unstyled">
+		<ul class="widget widget-menu unstyled" style="background:blue;">
 			<li>
 				<a class="collapsed" data-toggle="collapse" href="#togglePages">
 					<i class="menu-icon icon-folder-close"></i>
@@ -23,12 +23,12 @@
 							Today's' bills
 							<?php
 							$status = '1';
-							$today = date('d' ,time());
-							$salonid=$_SESSION['salonid'];
+							$today = date('d', time());
+							$salonid = $_SESSION['salonid'];
 							$ret = mysqli_query($conn, "SELECT * FROM billing where Status='$status' AND Day = '$today' AND SalonId = '$salonid' ");
 							$num = mysqli_num_rows($ret); { ?><b class="label orange pull-right">
-									<?php echo htmlentities($num); ?>
-								</b>
+								<?php echo htmlentities($num); ?>
+							</b>
 							<?php } ?>
 						</a>
 					</li>
@@ -38,11 +38,11 @@
 							This month bills
 							<?php
 							$status = '1';
-							$mon=date('m');
+							$mon = date('m');
 							$rt = mysqli_query($conn, "SELECT * FROM billing where Status!=0 AND Mon = '$mon' AND SalonId = '$salonid' ");
 							$num1 = mysqli_num_rows($rt); { ?><b class="label green pull-right">
-									<?php echo htmlentities($num1); ?>
-								</b>
+								<?php echo htmlentities($num1); ?>
+							</b>
 							<?php } ?>
 
 						</a>
@@ -77,6 +77,8 @@
 				</ul>
 			</li>
 
+
+
 			<li>
 				<a class="collapsed" data-toggle="collapse" href="#togglehr">
 					<i class="menu-icon icon-folder-close"></i>
@@ -97,7 +99,7 @@
 						</a>
 					</li>
 					<li>
-						
+
 						<a href="salaries.php?mon=<?php echo $mon; ?>">
 							<i class="icon-tasks"></i>
 							Manage salaries
@@ -134,8 +136,30 @@
 
 					</li>
 				</ul>
+				<li>
+				<a class="collapsed" data-toggle="collapse" href="#togglefinance">
+					<i class="menu-icon icon-folder-close"></i>
+					<i class="icon-chevron-down pull-right"></i><i class="icon-chevron-up pull-right"></i>
+					Financial Statement
+				</a>
+				<ul id="togglefinance" class="collapse unstyled">
+					<li>
+						<a href="manage-products.php">
+							<i class="icon-tasks"></i>
+							Net profit
+						</a>
+					</li>
+					<li>
+						<a href="managesallaries.php">
+							<i class="icon-tasks"></i>
+							Payroll
+						</a>
+					</li>
+				</ul>
+			</li>
 
 		</ul>
+		
 		<!--/.widget-nav-->
 
 		<ul class="widget widget-menu unstyled">

@@ -160,7 +160,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									$mon = $_GET['mon'];
 									$total = 0;
 									$salonid=$_SESSION['salonid'];
-									$query = mysqli_query($conn, "select * FROM billing,customers,employees,services WHERE billing.ServiceId = services.ServiceId AND billing.CustomerId = customers.CustomerId AND billing.EmployeeId=employees.EmployeeId AND billing.Mon = $mon AND billing.Status!=0 AND billind.SalonId = $salonid  ORDER BY billing.BillingId DESC");
+									$query = mysqli_query($conn, "SELECT * FROM billing,customers,employees,services WHERE billing.ServiceId = services.ServiceId AND billing.CustomerId = customers.CustomerId AND billing.EmployeeId=employees.EmployeeId AND billing.Mon = $mon AND billing.Status!=0 AND billing.SalonId = $salonid  ORDER BY billing.BillingId DESC");
 									$cnt = 1;
 									while ($row = mysqli_fetch_array($query)) {
 										$billid = $row['BillingId'];
