@@ -57,7 +57,11 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 							<div class="module">
 								<div class="module-head">
-									<h3>New employee</h3>
+									<h3><?php $selectsalon=mysqli_query($conn,"SELECT Name FROM Salon WHERE salonId=$salonid;"); 
+                                    while($saloninfo=mysqli_fetch_array($selectsalon)){
+                                        echo $saloninfo['Name']." Incident reporting";
+                                        
+                                    } ?></h3>
 								</div>
 								<div class="module-body">
 
@@ -84,83 +88,35 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									<br />
 
-									<form class="form-horizontal row-fluid" name="Category" method="post">
-
+									<form class="form-horizontal row-fluid" name="Category" method="post">										
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Salon Name</label>
+											<label class="control-label" for="basicinput">Select Month</label>
 											<div class="controls">
-												<?php
-												$salonid = $_SESSION['salonid'];
-												$salon = mysqli_query($conn, "SELECT Name FROM salon WHERE SalonId='$salonid'");
-												$num = mysqli_fetch_array($salon);
-												?>
-												<input type="text" placeholder="Enter category Name" name="category"
-													class="span8 tip" disabled value="<?php echo $num['Name']; ?>">
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Employee's Name</label>
-											<div class="controls">
-												<input type="text" placeholder="Enter employees Name" name="name"
-													class="span8 tip" required>
-											</div>
-										</div>
-
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Role</label>
-											<div class="controls">
-
-												<select type="text" name="role" class="span8 tip" required>
-													<option>Selecte role</option>
-													<option>Hair dresser</option>
-													<option>Nail dresser</option>
-													<option>Make up specialist </option>
+												<select name="mon" class="span3 tip" required id="month">
+													<option value="expense">Expense</option>
+													<option value="rent">Rent</option>
 												</select>
-											</div>
-										</div>
-
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Id Number</label>
-											<div class="controls">
-												<input type="number" placeholder="Enter ID" name="id" class="span8 tip"
-													required>
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Phone number</label>
-											<div class="controls">
-												<input type="number" placeholder="Enter contacts" name="contacts"
-													class="span8 tip" required>
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Location</label>
-											<div class="controls">
-												<input type="text" placeholder="Enter adress" name="location"
-													class="span8 tip" required>
-											</div>
-										</div>
-
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Description</label>
-											<div class="controls">
-												<textarea class="span8" name="description" rows="5"></textarea>
-											</div>
-										</div>
-
-										<div class="control-group">
-											<div class="controls">
-												<button type="submit" name="submit" class="btn">Create</button>
 											</div>
 										</div>
 									</form>
 								</div>
 							</div>
+							<?php
+							if (!empty($_GET['mon'])) {
+								$ishidden = "";
+
+							} else {
+								$ishidden = "hidden";
+
+							}
 
 
-							<div class="module">
+							?>
+
+
+							<div class="module" id="report" <?php echo @$ishidden; ?>>
 								<div class="module-head">
-									<h3>Manage Employees</h3>
+									<h3>Review</h3>
 								</div>
 								<div class="module-body table">
 									<table cellpadding="0" cellspacing="0" border="0"
@@ -168,21 +124,17 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>ID</th>
-												<th>Names</th>
-												<th>Location</th>
-												<th>Contacts</th>
-												<th>Role</th>
-												<th>Registered on</th>
-												<th>Repports</th>
-												<th class="span1">Action </th>
+												<th>Deductions</th>
+												<th>Loans</th>
+												<th>Salary</th>
 											</tr>
 										</thead>
 										<tbody>
 
 											<?php
 											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select * from employees WHERE SalonId = '$salonid' AND Status != 0");
+											$employeeid = $_GET['id'];
+											$query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Status != 0");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
 												?>
@@ -191,35 +143,29 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<?php echo htmlentities($cnt); ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['IdNumber']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['FullName']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Location']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Contacts']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Poste']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['CreationDates']); ?>
-													</td>
-													<td><a href="toemployee.php?id=<?php echo $row['EmployeeId'] ?>"><button class="btn btn-primary">
-														<i
-																class="icon-file"> </i>Report</button></a>
-													</td>
-													<td>
+														<?php $selectdeductions = mysqli_query($conn, "select * from deductions WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
+														$totaldeductions=0;
+														while($deductions = mysqli_fetch_array($selectdeductions))
+														{
+															$totaldeductions=$totaldeductions + $deductions['Amount'];
+														}
 
-														<a href="edit-employee.php?id=<?php echo $row['EmployeeId'] ?>"><i
-																class="icon-edit"></i></a>
-														<a href="manage-employees.php?id=<?php echo $row['EmployeeId'] ?>&del=delete"
-															onClick="return confirm('Are you sure you want to delete?')"><i
-																class="icon-remove-sign"></i></a>
+														echo $totaldeductions; ?>
 													</td>
+													<td>
+													<?php $selectloans = mysqli_query($conn, "select * from loans WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
+														$totalloans=0;
+														while($loans = mysqli_fetch_array($selectloans))
+														{
+															$totalloans=$totalloans + $loans['Amount'];
+														}
+
+														echo $totalloans; ?>
+													</td>
+													<td>
+														<?php echo $row['Amount']; ?>
+													</td>
+													
 												</tr>
 												<?php $cnt = $cnt + 1;
 											} ?>
@@ -251,6 +197,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 				$('.dataTables_paginate > a:first-child').append('<i class="icon-chevron-left shaded"></i>');
 				$('.dataTables_paginate > a:last-child').append('<i class="icon-chevron-right shaded"></i>');
 			});
+			// Start Select District
+			$(document).ready(function () {
+				$('#month').on('change', function () {
+					var mon = this.value;
+					window.location = 'toemployee.php?id=1&mon=' + mon;
+				});
+			});
 		</script>
+
 	</body>
 <?php } ?>

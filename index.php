@@ -12,6 +12,7 @@ if (isset($_POST['submit'])) {
 		$_SESSION['alogin'] = $_POST['username'];
 		$_SESSION['id'] = $num['UserId'];
 		$_SESSION['salonid'] = $num['SalonId'];
+		
 
 		$host = $_SERVER['HTTP_HOST'];
 		$uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');

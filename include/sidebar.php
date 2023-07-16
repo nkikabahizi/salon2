@@ -155,6 +155,12 @@
 							Payroll
 						</a>
 					</li>
+					<li>
+						<a href="reporting.php">
+							<i class="icon-tasks"></i>
+							Incident reporting
+						</a>
+					</li>
 				</ul>
 			</li>
 
