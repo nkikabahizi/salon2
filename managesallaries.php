@@ -6,23 +6,18 @@ if (strlen($_SESSION['alogin']) == 0) {
 } else {
 	date_default_timezone_set('Asia/Kolkata'); // change according timezone
 	$currentTime = date('d-m-Y h:i:s A', time());
+	$mon = $_GET['mon'];
+	$hairdresser = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Hair dresser' ");
+	$naildresser = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Nail dresser' ");
+	$makeup = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Make up specialist' ");
+	$cnt = 1;
+	$totalhair = 0;
+	$totalmakeup = 0;
+	$totalnail = 0;
+	$totalsalaries = $totalhair + $totalmakeup + $totalnail;
 
 
-	if (isset($_POST['submit'])) {
-		$name = $_POST['name'];
-		$role = $_POST['role'];
-		$location = $_POST['location'];
-		$id = $_POST['id'];
-		$contacts = $_POST['contacts'];
-		$description = $_POST['description'];
-		$userid = $_SESSION['id'];
-		$salonid = $_SESSION['salonid'];
-		$sql = mysqli_query($conn, "insert into employees(FullName,Location,Contacts,IdNumber,Poste,Description,UserId,SalonId) values('$name','$location', '$contacts', '$id', '$role', '$description', '$userid', '$salonid')");
-		@$employeeid = $conn->insert_id;
-		$_SESSION['msg'] = "Category Created !!";
-		echo "<script>window.location='add-contract.php?employeeid=$employeeid';</script>";
 
-	}
 
 	if (isset($_GET['del'])) {
 		mysqli_query($con, "delete from category where id = '" . $_GET['id'] . "'");
@@ -60,15 +55,16 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<h3>Salaries Overview</h3>
 								</div>
 								<div class="module-body">
-                                    <div class="jumbotron">
-                                        <h1 class="display-3">Salaries Detailed repport</h1>
-                                        <p class="lead">You can keep track of the previous payrolls and analyse the Logistics of your salon</p>
-                                        <hr class="my-2">
-                                        <p class="lead">
-                                            
-                                        </p>
+									<div class="jumbotron">
+										<h1 class="display-3">Salaries Detailed repport</h1>
+										<p class="lead">You can keep track of the previous payrolls and analyse the
+											Logistics of your salon</p>
+										<hr class="my-2">
+										<p class="lead">
 
-                                    </div>
+										</p>
+
+									</div>
 
 									<?php if (isset($_POST['submit'])) { ?>
 										<div class="alert alert-success">
@@ -103,62 +99,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										}
 									</script>
 
-									<form class="form-horizontal row-fluid" name="Category" method="GET" action="payroll.php">
-
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Select Payment frequency</label>
-											<div class="controls">
-												<select type="text" name="type" class="span8 tip"
-													onChange="getAllowance(this.value)" id="type">
-													<option>Selecte Frequency</option>
-													<option value="1">1 Day Payments</option>
-													<option value="15">15 Days Payments</option>
-													<option value="30">30 Days Payments</option>
-												</select>
-											</div>
-										</div>
-										<div class="control-group" id="allowance">
-
-										</div>
-
-
-
-
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Description</label>
-											<div class="controls">
-												<textarea class="span8" name="description" rows="5"></textarea>
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Compute Loans</label>
-											<div class="controls">
-											<input type="checkbox" name="loans" value="1">*all employees on payroll with loans will pay their percentages
-
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Computedeductions</label>
-											<div class="controls">
-												<input type="checkbox" name="deductions" value="1"> *all employees on payroll with deductions will be deducted
-											</div>
-										</div>
-
-
-
-										<div class="control-group">
-											<div class="controls">
-												<button type="submit" class="btn">Generate</button>
-											</div>
-										</div>
-									</form>
-								</div>
-							</div>
-
-
-							<div class="module" id="salaries">
-								<div class="module-head">
-								<?php
+									<?php
 									$mon = $_GET['mon'];
 									switch ($mon) {
 										case '1':
@@ -206,102 +147,179 @@ if (strlen($_SESSION['alogin']) == 0) {
 									}
 									?>
 
-									<h3>Payment History of <?php echo $monthname;?></h3>
-									<form method='GET' action="salaries.php#salaries">
-										<div>
-											<div class="col-md-4">
+									<form class="form-horizontal row-fluid" method="GET" action="managesallaries.php">
+
+										<div class="control-group">
+											<label class="control-label" for="basicinput">Filter Month</label>
+											<div class="controls row">
 												<select name="mon" class="span3 tip" required>
-													<option value="">Select different month</option>
-													<option value="1">January</option>
-													<option value="2">February</option>
-													<option value="3">March</option>
-													<option value="4">April</option>
-													<option value="5">May</option>
-													<option value="6">June</option>
-													<option value="7">July</option>
-													<option value="8">August</option>
-													<option value="9">September</option>
+													<option value="<?php echo $_GET['mon']; ?>"><?php echo $monthname; ?>
+													</option>
+													<option value="01">January</option>
+													<option value="02">February</option>
+													<option value="03">March</option>
+													<option value="04">April</option>
+													<option value="05">May</option>
+													<option value="06">June</option>
+													<option value="07">July</option>
+													<option value="08">August</option>
+													<option value="09">September</option>
 													<option value="10">October</option>
 													<option value="11">November</option>
 													<option value="12">December</option>
 												</select>
+												<button type="submit" class="btn btn-info"><span
+														class="icon-arrow-right"></span></button>
 											</div>
-											<div class="col-md-4">
-												<button type="submit" class="btn btn-primary">Filter<span
-														class="icon-filter"> </button>
+
+										</div>
 									</form>
+
 								</div>
-									</div>
-									</div>
-								<div class="module-body table">
-									<table cellpadding="0" cellspacing="0" border="0"
-										class="datatable-1 table table-bordered table-striped	 display" width="100%">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>Dates</th>
-												<th>Description</th>
-												<th>Number of employees</th>
-												<th>Total PayOut</th>
-												<th>User</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
+								<div class="control-group" id="allowance">
 
-											<?php
-											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select * from payroll,users WHERE payroll.UserId = users.UserId AND users.SalonId = $salonid AND payroll.Month = '$mon' ");
-											$cnt = 1;
-											while ($row = mysqli_fetch_array($query)) {
-												@$totalpayout=$totalpayout + $row['Amount'];
-												?>
-												<tr>
-													<td>
-														<?php echo htmlentities($cnt); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Dates']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Description']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['EmployeesNumber']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Amount'])." FRW"; ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['FullName']); ?>
-													</td>
-													<td>
-														<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
-																class="icon-eye-open"></i></a>
-													</td>
-												</tr>
-												<?php $cnt = $cnt + 1;
-											} ?>
-											
-										</tbody>
-										<tfoot>
-										<tr>
-											<td></td><td><b>Total Payouts</b></td><td></td><td></td><td><?php echo @$totalpayout ." RWF"; ?></td><td></td><td></td>
-
-											</tr>
-										</tfoot>
-
-									</table>
-									
 								</div>
+								<div class="container">
+									<div class="span2">
+										<div class="well">
+											<div class="square square-sm"
+												style="background:skyblue; height:50px; border-radius:12px;margin-top:-12px">
+												...Hair Dressers</div>
+											<center>
+												<div style="font-weight:bold">
+													<h5>
+														<?php while ($row1 = mysqli_fetch_array($hairdresser)) {
+															@$totalhair = $totalhair + $row1['Amount'];
+														} 
+														echo $totalhair;
+														?>
+													</h5>
+												</div>
+											</center>
+										</div>
+									</div>
+									<div class="span2">
+										<div class="well">
+											<div class="square square-sm"
+												style="background:skyblue; height:50px; border-radius:12px;margin-top:-12px">
+												...Nail Dresser</div>
+											<center>
+												<div style="font-weight:bold">
+													<h5><?php while ($row2 = mysqli_fetch_array($naildresser)) {
+															@$totalnail = $totalnail + $row2['Amount'];
+														} 
+														echo $totalnail;
+														?></h5>
+												</div>
+											</center>
+										</div>
+									</div>
+									<div class="span2">
+										<div class="well">
+											<div class="square square-sm"
+												style="background:skyblue; height:50px; border-radius:12px;margin-top:-12px">
+												...Makeup Specialist</div>
+											<center>
+												<div style="font-weight:bold">
+													<h5><?php while ($row3 = mysqli_fetch_array($naildresser)) {
+															@$totalmakeup = $totalnail + $row3['Amount'];
+														} 
+														echo $totalmakeup;
+														?></h5>
+												</div>
+											</center>
+										</div>
+									</div>
+								</div>
+
+								<div class="control-group">
+									<div class="controls">
+										<b>
+											<h4>Total salaries : ......  <?php  echo $totalsalaries= $totalhair + $totalmakeup + $totalnail ?>RWF</h4>
+										</b>
+									</div>
+								</div>
+								</form>
+							</div>
+						</div>
+
+
+						<div class="module" id="incomestatement">
+							<div class="module-head">
+								Income Statement in <?php echo $monthname; ?>
 							</div>
 
+						</div>
+						<div class="module-body table">
+							<table cellpadding="0" cellspacing="0" border="0"
+								class="datatable-1 table table-bordered table-striped	 display" width="100%">
+								<thead>
+									<tr>
+										<th>Month</th>
+										<th>Purchases</th>
+										<th>Income</th>
+										<th>Salaries & wages</th>
+										<th>Net Income</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<?php
+									$salonid = $_SESSION['salonid'];
+									$selectpurchase = mysqli_query($conn, "select UnitPrice,Quantity from purchases WHERE Mon = '$mon' AND Salonid = '$salonid' ");
+									$cnt = 1;
+									$totalpurchase = 0;
+									while ($row = mysqli_fetch_array($selectpurchase)) {
+										$subtotal = $row['UnitPrice'] * $row['Quantity'];
+										@$totalpurchase = $totalpurchase + $subtotal;
+									}
+									$selectbilling = mysqli_query($conn, "select ServiceFee,TotalProducts from billing WHERE Mon = '$mon' AND Salonid = '$salonid'");
+									$cnt = 1;
+									$totalbilling = 0;
+									while ($row = mysqli_fetch_array($selectbilling)) {
+										$subtotal = $row['ServiceFee'] * $row['TotalProducts'];
+										@$totalbilling = $totalbilling + $subtotal;
+									}
+										?>
+										<tr>
+											
+											<td>
+												<?php echo $monthname; ?>
+											</td>
+											<td>
+												<?php echo $totalpurchase; ?>
+											</td>
+											<td>
+												<?php echo $totalbilling. "RWF"; ?>
+											</td>
+											<td>
+												<?php echo $totalsalaries." RWF"; ?>
+											</td>
+											<td>
+												<?php echo $netincome= $totalbilling - $totalpurchase - $totalsalaries."RWF" ;?>
+											</td>
+											<td>
+												<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
+														class="icon-eye-open"></i></a>
+											</td>
+										</tr>
+
+								</tbody>
+								<tfoot>
+
+								</tfoot>
+
+							</table>
+
+						</div>
+					</div>
 
 
-						</div><!--/.content-->
-					</div><!--/.span9-->
-				</div>
-			</div><!--/.container-->
+
+				</div><!--/.content-->
+			</div><!--/.span9-->
+		</div>
+		</div><!--/.container-->
 		</div><!--/.wrapper-->
 
 		<?php include('include/footer.php'); ?>

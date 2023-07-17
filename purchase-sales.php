@@ -10,13 +10,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$quantity = $_POST['quantity'];
 		$description = $_POST['description'];
 		$salonid = $_SESSION['salonid'];
+		$mon=date('m');
 		foreach ($quantity as $product => $qty) {
 			$keep = mysqli_query($conn, "SELECT Quantity,Price FROM products WHERE ProductId = '$product'");
 			$currentquantity = mysqli_fetch_array($keep);
 			$cqty = $currentquantity['Quantity'];
 			$price = $currentquantity['Price'];
 			$newq = $cqty + $qty;
-			$keep = mysqli_query($conn, "insert into purchases(ProductId,Quantity,UnitPrice,Description,SalonId) values('$product','$qty', '$price', '$description', '$salonid')");
+			$keep = mysqli_query($conn, "insert into purchases(ProductId,Quantity,UnitPrice,Description,SalonId,Mon) values('$product','$qty', '$price', '$description', '$salonid','$mon')");
 			$change = mysqli_query($conn, "update products SET Quantity = '$newq' WHERE ProductId = '$product'");
 			if ($keep == 1) {
 				header('location:purchase-sales.php');

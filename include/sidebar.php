@@ -155,20 +155,15 @@
 							Payroll
 						</a>
 					</li>
-					<li>
-						<a href="reporting.php">
-							<i class="icon-tasks"></i>
-							Incident reporting
-						</a>
-					</li>
 				</ul>
 			</li>
 
 		</ul>
-		
+
 		<!--/.widget-nav-->
 
 		<ul class="widget widget-menu unstyled">
+			<li><a href="managesallaries.php?mon=<?php echo date('m'); ?>"><i class="menu-icon icon-tasks"></i>Financial Statement</a></li>
 			<li><a href="change-password.php"><i class="menu-icon icon-tasks"></i>Change password</a></li>
 
 			<li>
