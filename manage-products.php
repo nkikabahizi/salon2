@@ -110,6 +110,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<?php } ?>
 
 									<br />
+									
 
 									<form class="form-horizontal row-fluid" name="insertproduct" method="post"
 										enctype="multipart/form-data">

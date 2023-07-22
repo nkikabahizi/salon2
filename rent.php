@@ -1,6 +1,9 @@
+<?php include('include/config.php'); 
+session_start();
+?>
 
     <div class="module-head">
-        <h3>Review</h3>
+        <h3>Manage rent</h3>
     </div>
     <div class="module-body table">
         <table cellpadding="0" cellspacing="0" border="0"
@@ -8,50 +11,34 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Deductions</th>
-                    <th>Loans</th>
-                    <th>Salary</th>
+                    <th>Month</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Dates</th>
                 </tr>
             </thead>
             <tbody>
-
-                <?php
-                $salonid = $_SESSION['salonid'];
-                $employeeid = $_GET['id'];
-                $query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Status != 0");
+                <?php 
+                $salonid=$_SESSION['salonid'];
+                $selectrent= mysqli_query($conn, "select * from expenses WHERE SalonId = '$salonid' AND Type= 'Rent' ORDER BY ExpenseId DESC");
                 $cnt = 1;
-                while ($row = mysqli_fetch_array($query)) {
+                while ($row = mysqli_fetch_array($selectrent)) {
+                    $expenseid = $row['ExpenseId'];
                     ?>
-                    <tr>
-                        <td>
-                            <?php echo htmlentities($cnt); ?>
-                        </td>
-                        <td>
-                            <?php $selectdeductions = mysqli_query($conn, "select * from deductions WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
-                            $totaldeductions = 0;
-                            while ($deductions = mysqli_fetch_array($selectdeductions)) {
-                                $totaldeductions = $totaldeductions + $deductions['Amount'];
-                            }
+                ?>
+                <tr>
+                    <td><?php echo $cnt; ?></td>
+                    <td><?php echo $row['Mon']; ?></td>
+                    <td><?php echo $row['Amount']; ?></td>
+                    <td><?php echo $row['Description']; ?></td>
+                    <td><?php echo $row['Dates']; ?></td>
 
-                            echo $totaldeductions; ?>
-                        </td>
-                        <td>
-                            <?php $selectloans = mysqli_query($conn, "select * from loans WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
-                            $totalloans = 0;
-                            while ($loans = mysqli_fetch_array($selectloans)) {
-                                $totalloans = $totalloans + $loans['Amount'];
-                            }
 
-                            echo $totalloans; ?>
-                        </td>
-                        <td>
-                            <?php echo $row['Amount']; ?>
-                        </td>
 
-                    </tr>
-                    <?php $cnt = $cnt + 1;
-                } ?>
+
+
+                </tr>
+                <?PHP } $cnt++;  ?>               
 
         </table>
     </div>
-</div>
