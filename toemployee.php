@@ -154,7 +154,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 											<?php
 											$salonid = $_SESSION['salonid'];
 											$employeeid = $_GET['id'];
-											$query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Status != 0");
+											$mon=$_GET['mon'];
+											$query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Status != 0 AND Mon = '$mon' ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
 												?>
@@ -180,7 +181,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 															$totalloans=$totalloans + $loans['Amount'];
 														}
 
-														echo $totalloans; ?>
+														echo $totaldeductions; ?>
 													</td>
 													<td>
 														<?php echo $row['Amount']; ?>

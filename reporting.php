@@ -173,6 +173,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									</table>
 								</div>
 							</div>
+                            /////
 
 
 
@@ -200,8 +201,29 @@ if (strlen($_SESSION['alogin']) == 0) {
 			// Start Select District
 			$(document).ready(function () {
 				$('#month').on('change', function () {
-					var mon = this.value;
-					window.location = 'toemployee.php?id=1&mon=' + mon;
+					var type = this.value;
+					if(type == 'expense')
+                    {
+                        $.ajax({
+						url: "include/helper.php",
+						type: "POST",
+						data: {
+							cell_id: cell_id,
+							target: 'get_village'
+						},
+						cache: false,
+						success: function (result) {
+							$("#select_village").html(result);
+						}
+					});
+                        
+
+                    }
+                    else{
+                        alert('Rent');
+
+
+                    }
 				});
 			});
 		</script>
