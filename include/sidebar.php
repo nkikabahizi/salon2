@@ -2,7 +2,7 @@
 	<div class="sidebar">
 
 
-		<ul class="widget widget-menu unstyled" style="background:blue;">
+		<ul class="widget widget-menu unstyled">
 			<li>
 				<a class="collapsed" data-toggle="collapse" href="#togglePages">
 					<i class="menu-icon icon-folder-close"></i>
