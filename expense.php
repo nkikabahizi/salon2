@@ -96,15 +96,7 @@ if (isset($_POST['save']))
     $dates=date('d/m/Y');
     $type='Expense';
     $saveexpense=mysqli_query($conn, "INSERT INTO expenses(Description,Amount,Typee,Mon,Dates,SalonId) VALUES ('$desc','$amount','$type','$mon','$dates','$salonid')");
-    // if($saveexpense == 1)
-    // {
-    //     echo "<script>alert(saved);</script>";
-    // }
-    // else{
-    //     echo "<script>alert(Failed);</script>";
-
-    // }
-
+   
 }
 ?>
 </div>
