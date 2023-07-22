@@ -45,8 +45,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="alert alert-success">
 											<button type="button" class="close" data-dismiss="alert">×</button>
 											<strong>Loan saved!</strong>
-											<?php echo htmlentities($_SESSION['msg']); ?>
-											<?php echo htmlentities($_SESSION['msg'] = ""); ?>
+											<?php echo htmlentities(@$_SESSION['msg']); ?>
+											<?php echo htmlentities(@$_SESSION['msg'] = ""); ?>
 										</div>
 									<?php } ?>
 
