@@ -163,7 +163,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<select name="availability" id="productAvailability" class="span8 tip"
 													required>
 													<option value="">Select</option>
-													<option value="In Stock">Available</option>
+													<option value="Available">Available</option>
 													<option value="Out of Stock">Out of service</option>
 												</select>
 											</div>

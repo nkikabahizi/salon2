@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('include/config.php');
+
 if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
@@ -84,8 +85,11 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<?php } ?>
 
 									<br />
-
-									<form class="form-horizontal row-fluid" name="Category" method="post">										
+									<?php if(!empty($_GET['saved']))
+								{
+								}
+								else{
+									?>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Select Month</label>
 											<div class="controls">
@@ -96,7 +100,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												</select>
 											</div>
 										</div>
-									</form>
+										<?php }  ?>
 								</div>
 							</div>
 							<?php
@@ -113,6 +117,11 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 
 							<div class="module" id="report" >
+								<?php if(!empty($_GET['saved']))
+								{
+									echo "<h3>Incident reported successful  <a href='reporting.php'><utton class='btn btn-lg btn-primary'><span class='icon-home'></span></button></a></h3>";
+								}
+								?>
 								
 							</div>
                         
@@ -183,7 +192,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 
                     }
-					else
+					if(type == '')
 					{
 						$.ajax({
 						url: "selectreport.php",
@@ -205,6 +214,51 @@ if (strlen($_SESSION['alogin']) == 0) {
 				});
 			});
 		</script>
+		<?php 
+		if (isset($_POST['save']))
+		{
+			$desc=$_POST['description'];
+			$salonid=$_SESSION['salonid'];
+			$amount=$_POST['amount'];
+			$mon=date('m');
+			$salonid=$_SESSION['salonid'];
+			$dates=date('d/m/Y');
+			$type='Expense';
+			$saveexpense=mysqli_query($conn, "INSERT INTO expenses(Description,Amount,Typee,Mon,Dates,SalonId) VALUES ('$desc','$amount','$type','$mon','$dates','$salonid')");
+			if($saveexpense == 1)
+			{
+				
+			echo "<script>window.location='reporting.php?saved=ok'</script>";
+			}
+			else{
+				
+			echo "<script>window.alert('Failed')</script>";
+			}
+		   
+		}
+		if (isset($_POST['saverent'])) {
+			$month = $_POST['month'];
+			$amount = $_POST['amount'];
+			$description = $_POST['description'];
+			$type = 'Rent';
+			$mon = date('m');
+			$dates = date('d/m/Y');
+			$salonid = $_SESSION['salonid'];
+			$saverent = mysqli_query($conn, "INSERT INTO `expenses` (`Description`, `Amount`, `Typee`, `Mon`, `Dates`, `SalonId`) VALUES ('$description' ,'$amount', '$type', '$mon', '$dates', '$salonid')");
+			if($saverent == 1)
+			{
+				
+			echo "<script>window.location='reporting.php?saved=ok'</script>";
+			}
+			else{
+				
+			echo "<script>window.alert('Failed')</script>";
+			}
+		}
+		?>
+		
+		
 
 	</body>
 <?php } ?>
+

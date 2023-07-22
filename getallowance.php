@@ -26,7 +26,7 @@ if (!empty($_POST["type"])) {
                 $now = new DateTime($today);
                 $interval = $from->diff($now);
                 $days = $interval->days;
-                $days = $days - 1;
+                $days = $days + 1;
                 if ($days >= $frequency) {
                 $i = $i + 1;
 

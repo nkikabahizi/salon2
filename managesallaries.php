@@ -190,7 +190,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 													<h5>
 														<?php while ($row1 = mysqli_fetch_array($hairdresser)) {
 															@$totalhair = $totalhair + $row1['Amount'];
-														} 
+														}
 														echo $totalhair;
 														?>
 													</h5>
@@ -205,11 +205,13 @@ if (strlen($_SESSION['alogin']) == 0) {
 												...Nail Dresser</div>
 											<center>
 												<div style="font-weight:bold">
-													<h5><?php while ($row2 = mysqli_fetch_array($naildresser)) {
+													<h5>
+														<?php while ($row2 = mysqli_fetch_array($naildresser)) {
 															@$totalnail = $totalnail + $row2['Amount'];
-														} 
+														}
 														echo $totalnail;
-														?></h5>
+														?>
+													</h5>
 												</div>
 											</center>
 										</div>
@@ -221,11 +223,13 @@ if (strlen($_SESSION['alogin']) == 0) {
 												...Makeup Specialist</div>
 											<center>
 												<div style="font-weight:bold">
-													<h5><?php while ($row3 = mysqli_fetch_array($naildresser)) {
+													<h5>
+														<?php while ($row3 = mysqli_fetch_array($naildresser)) {
 															@$totalmakeup = $totalnail + $row3['Amount'];
-														} 
+														}
 														echo $totalmakeup;
-														?></h5>
+														?>
+													</h5>
 												</div>
 											</center>
 										</div>
@@ -235,7 +239,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 								<div class="control-group">
 									<div class="controls">
 										<b>
-											<h4>Total salaries : ......  <?php  echo $totalsalaries= $totalhair + $totalmakeup + $totalnail ?>RWF</h4>
+											<h4>Total salaries : ......
+												<?php echo $totalsalaries = $totalhair + $totalmakeup + $totalnail ?>RWF
+											</h4>
 										</b>
 									</div>
 								</div>
@@ -246,7 +252,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 						<div class="module" id="incomestatement">
 							<div class="module-head">
-								Income Statement in <?php echo $monthname; ?>
+								Income Statement in
+								<?php echo $monthname; ?>
 							</div>
 
 						</div>
@@ -259,7 +266,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<th>Purchases</th>
 										<th>Income</th>
 										<th>Salaries & wages</th>
+										<th>Expense & Rent</th>
 										<th>Net Income</th>
+										<th> </th>
 									</tr>
 								</thead>
 								<tbody>
@@ -273,36 +282,53 @@ if (strlen($_SESSION['alogin']) == 0) {
 										$subtotal = $row['UnitPrice'] * $row['Quantity'];
 										@$totalpurchase = $totalpurchase + $subtotal;
 									}
-									$selectbilling = mysqli_query($conn, "select ServiceFee,TotalProducts from billing WHERE Mon = '$mon' AND Salonid = '$salonid'");
+
+									 $selectexpenses = mysqli_query($conn, "select * FROM expenses WHERE Mon = '$mon' AND SalonId = $salonid");
+											$cnt = 1;
+											$totalexpense = 0;
+											while ($row = mysqli_fetch_array($selectexpenses)) {
+												$subtotall = $row['Amount'] + $row['Amount'];
+												@$totalexpense = $totalexpense + $subtotall;
+											}
+											
+											
+
+									 
+									$selectbilling = mysqli_query($conn, "select ServiceFee,TotalProducts from billing WHERE Mon = '$mon' AND Salonid = '$salonid' AND billing.Status != 0");
 									$cnt = 1;
 									$totalbilling = 0;
 									while ($row = mysqli_fetch_array($selectbilling)) {
-										$subtotal = $row['ServiceFee'] * $row['TotalProducts'];
+										$subtotal = $row['ServiceFee'] + $row['TotalProducts'];
 										@$totalbilling = $totalbilling + $subtotal;
 									}
-										?>
-										<tr>
+									?>
+									<tr>
+
+										<td>
+											<?php echo $monthname; ?>
+										</td>
+										<td>
+											<?php echo $totalpurchase; ?>
+										</td>
+										<td>
+											<?php echo $totalbilling . "RWF"; ?>
+										</td>
+										<td>
+											<?php echo $totalsalaries . " RWF"; ?>
+										</td>
+										<td>
+										<?php echo $totalexpense . " RWFrr"; ?>
 											
-											<td>
-												<?php echo $monthname; ?>
-											</td>
-											<td>
-												<?php echo $totalpurchase; ?>
-											</td>
-											<td>
-												<?php echo $totalbilling. "RWF"; ?>
-											</td>
-											<td>
-												<?php echo $totalsalaries." RWF"; ?>
-											</td>
-											<td>
-												<?php echo $netincome= $totalbilling - $totalpurchase - $totalsalaries."RWF" ;?>
-											</td>
-											<td>
-												<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
-														class="icon-eye-open"></i></a>
-											</td>
-										</tr>
+										</td>
+										<td>
+											<?php echo $netincome = $totalbilling - $totalpurchase - $totalsalaries - $totalexpense. "RWF"; ?>
+										</td>
+										<td>
+										
+											<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
+													class="icon-eye-open"></i></a>
+										</td>
+									</tr>
 
 								</tbody>
 								<tfoot>

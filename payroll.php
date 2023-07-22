@@ -99,7 +99,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                 $now = new DateTime($today);
                                                 $interval = $from->diff($now);
                                                 $days = $interval->days;
-                                                $days = $days - 1;
+                                                $days = $days + 1;
                                                 @$loans=$_GET['loans'];
                                                 @$deductions=$_GET['deductions'];
                                                 $employeeid=$salaries['EmployeeId'];
@@ -236,7 +236,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     $now = new DateTime($today);
                                     $interval = $from->diff($now);
                                     $days = $interval->days;
-                                    $days = $days - 1;
+                                    $days = $days + 1;
                                     $description=$_GET['description'];
                                     $sid=$salaries['SalaryId'];
                                     $employeeid = $salaries['EmployeeId'];

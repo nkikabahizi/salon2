@@ -22,7 +22,6 @@ session_start();
             <label class="control-label" for="basicinput">Amount</label>
             <div class="controls">
                 <input type="number" name="amount" placeholder="Enter expense amount" class="span8 tip" required>
-
             </div>
         </div>
 
@@ -67,14 +66,14 @@ session_start();
     <tbody>
              <?php 
                 $salonid=$_SESSION['salonid'];
-                $selectrent= mysqli_query($conn, "select * from expenses WHERE SalonId = '$salonid' AND Type= 'Expense' ORDER BY ExpenseId DESC");
+                $selectrent= mysqli_query($conn, "select * from expenses WHERE SalonId =$salonid AND Typee= 'Expense' ORDER BY ExpenseId DESC");
                 $cnt = 1;
                 while ($row = mysqli_fetch_array($selectrent)) {
                     $expenseid = $row['ExpenseId'];
                     ?>
-                ?>
+                
                 <tr>
-                    <td><?php echo $cnt; ?></td>
+                    <td><?php echo $salonid; ?></td>
                     <td><?php echo $row['Mon']; ?></td>
                     <td><?php echo $row['Amount']; ?></td>
                     <td><?php echo $row['Description']; ?></td>
@@ -85,19 +84,6 @@ session_start();
 
 </table>
 
-<?php
-if (isset($_POST['save']))
-{
-    $desc=$_POST['description'];
-    $salonid=$_SESSION['salonid'];
-    $amount=$_POST['amount'];
-    $mon=date('m');
-    $salonid=$_SESSION['salonid'];
-    $dates=date('d/m/Y');
-    $type='Expense';
-    $saveexpense=mysqli_query($conn, "INSERT INTO expenses(Description,Amount,Typee,Mon,Dates,SalonId) VALUES ('$desc','$amount','$type','$mon','$dates','$salonid')");
-   
-}
-?>
+
 </div>
 </div>
