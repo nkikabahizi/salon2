@@ -4,9 +4,6 @@ include('include/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
-
-
-
 	if (isset($_POST['submit'])) {
 		$name = $_POST['name'];
 		$role = $_POST['role'];

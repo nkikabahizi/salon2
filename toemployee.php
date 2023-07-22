@@ -99,6 +99,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											</div>
 										</div>
 										<div class="control-group">
+											<input type="text" value="<?php echo $_GET['id']; ?>" id="id" style="display:none">
 											<label class="control-label" for="basicinput">Select Month</label>
 											<div class="controls">
 												<select name="mon" class="span3 tip" required id="month">
@@ -147,6 +148,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<th>Deductions</th>
 												<th>Loans</th>
 												<th>Salary</th>
+												<th>Payment Status</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -155,9 +157,10 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$salonid = $_SESSION['salonid'];
 											$employeeid = $_GET['id'];
 											$mon=$_GET['mon'];
-											$query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Status != 0 AND Mon = '$mon' ");
+											$query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Mon = '$mon' ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
+												$paymentstatus=$row['Status'];
 												?>
 												<tr>
 													<td>
@@ -181,10 +184,28 @@ if (strlen($_SESSION['alogin']) == 0) {
 															$totalloans=$totalloans + $loans['Amount'];
 														}
 
-														echo $totaldeductions; ?>
+														echo $totalloans; ?>
 													</td>
 													<td>
 														<?php echo $row['Amount']; ?>
+													</td>
+													<td>
+														<?php 
+														if($paymentstatus != 1)
+														{
+															?>
+															<img src="images/offblue.png"> Not Yet paid
+															<?php
+														}
+														elseif($paymentstatus == 1)
+														{
+															?>
+															<img src="images/onblue.png"> Paid
+
+															<?php
+														}
+														?>
+														
 													</td>
 													
 												</tr>
@@ -218,11 +239,13 @@ if (strlen($_SESSION['alogin']) == 0) {
 				$('.dataTables_paginate > a:first-child').append('<i class="icon-chevron-left shaded"></i>');
 				$('.dataTables_paginate > a:last-child').append('<i class="icon-chevron-right shaded"></i>');
 			});
-			// Start Select District
+			 
+
 			$(document).ready(function () {
 				$('#month').on('change', function () {
 					var mon = this.value;
-					window.location = 'toemployee.php?id=1&mon=' + mon;
+					var id= document.getElementById('id').value;
+					window.location = 'toemployee.php?id=' +id+ '&mon=' + mon;
 				});
 			});
 		</script>
