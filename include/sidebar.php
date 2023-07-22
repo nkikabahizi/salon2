@@ -136,14 +136,41 @@
 
 					</li>
 				</ul>
-			
+				<li>
+				<a class="collapsed" data-toggle="collapse" href="#togglefinance">
+					<i class="menu-icon icon-folder-close"></i>
+					<i class="icon-chevron-down pull-right"></i><i class="icon-chevron-up pull-right"></i>
+					Financial Statementtt
+				</a>
+				<ul id="togglefinance" class="collapse unstyled">
+					<li>
+						<a href="manage-products.php">
+							<i class="icon-tasks"></i>
+							Net profit
+						</a>
+					</li>
+					<li>
+					<a href="managesallaries.php?mon=<?php echo date('m'); ?>">
+							<i class="icon-tasks"></i>
+							Payroll
+						</a>
+					</li>
+
+					<li>
+					<a href="reporting.php">
+							<i class="icon-tasks"></i>
+							Incident reporting
+						</a>
+					</li>
+				</ul>
+			</li>
 
 		</ul>
 
 		<!--/.widget-nav-->
 
 		<ul class="widget widget-menu unstyled">
-			<li><a href="managesallaries.php?mon=<?php echo date('m'); ?>"><i class="menu-icon icon-tasks"></i>Financial Statement</a></li>
+			
 			<li><a href="change-password.php"><i class="menu-icon icon-tasks"></i>Change password</a></li>
 
 			<li>

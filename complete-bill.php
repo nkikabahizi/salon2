@@ -278,6 +278,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $subpercentage = $fee * $jobpercentage;
                                         $percentage = $subpercentage / 100;
                                         $today = date("Y-m-d");
+                                        $mon=date("m");
                                         //select current salary
                                         $selectsalary = mysqli_query($conn, "SELECT * FROM salaries WHERE EmployeeId = $employeeid ORDER BY SalaryId DESC");
                                         $lastsalary = mysqli_fetch_array($selectsalary);
@@ -294,12 +295,12 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                 $updatesalary = mysqli_query($conn, "UPDATE salaries SET Amount = '$newamount' WHERE SalaryId = '$salaryid' ");
 
                                             } else {
-                                                $savenewsalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate, Status) VALUES ('$employeeid', '$percentage', '$today', '0')");
+                                                $savenewsalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate,Mon, Status) VALUES ('$employeeid', '$percentage', '$today','$mon', '0')");
 
 
                                             }
                                         } else {
-                                            $savesalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate, Status) VALUES ('$employeeid', '$percentage', '$today', '0')");
+                                            $savesalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate,Mon, Status) VALUES ('$employeeid', '$percentage', '$today','$mon', '0')");
 
                                         }
 
