@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('include/config.php');
+include 'pay_parse.php';
 if (strlen($_SESSION['alogin']) == 0) {
     header('location:index.php');
 } else {
@@ -124,8 +125,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                             <option value="<?php echo $emp['EmployeeId']; ?>"><?php echo $emp['FullName']; ?></option>
                                                             <?PHP
 
-                                                        } 
-                                                        
+                                                        }
+
                                                     }
                                                     ?>
                                                 </select>
@@ -136,7 +137,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <div class="controls">
                                                 <textarea name="description" placeholder="Anything to describe ?" rows="6"
                                                     class="span8 tip">
-                                                                                                                                                        </textarea>
+                                                                                                                                                            </textarea>
                                             </div>
                                         </div>
                                         <div class="module-head">
@@ -166,7 +167,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <label class="control-label" for="basicinput">Total bill</label>
                                             <div class="controls">
                                                 <input type="number" name="totalbill" placeholder="Total bill"
-                                                    class="span8 tip" value="<?php echo $totalbill; ?>" required disabled>
+                                                    class="span8 tip" value="<?php echo $totalbill; ?>" required>
 
                                             </div>
                                         </div>
@@ -278,7 +279,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $subpercentage = $fee * $jobpercentage;
                                         $percentage = $subpercentage / 100;
                                         $today = date("Y-m-d");
-                                        $mon=date("m");
+                                        $mon = date("m");
                                         //select current salary
                                         $selectsalary = mysqli_query($conn, "SELECT * FROM salaries WHERE EmployeeId = $employeeid ORDER BY SalaryId DESC");
                                         $lastsalary = mysqli_fetch_array($selectsalary);
@@ -314,11 +315,102 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             $remaining = $insto - $quantity;
                                             $update = mysqli_query($conn, "UPDATE products SET Quantity = '$remaining' WHERE ProductId = $pro");
                                         }
-                                        
-                                      echo "<script> window.location='bill.php?billid=$billid'; </script>";
+
+                                        echo "<script> window.location='bill.php?billid=$billid'; </script>";
 
 
                                     }
+
+                                    if (isset($_POST['paynow'])) {
+
+                                        $curl = curl_init();
+                                        $transID = uniqid();
+                                        $calback = "";
+                                        $price=$_POST['totalbill'];
+                                        
+                                        hdev_payment::api_id("HDEV-48d87cf2-c648-49c1-9c7c-a1a12dbc30eb-ID"); //send the api ID to hdev_payment
+                                        hdev_payment::api_key("HDEV-79d8e552-5bed-4f5a-9551-cd051e32e406-KEY"); //send the api KEY to hdev_payment
+                                        $pay = hdev_payment::pay($phone, $price, $transID, $calback); //finishing the transaction 
+                                
+                                        //var_dump($pay);//to get payment server response
+                                        $status = $pay->status; //get transaction status if sent or not
+                                        $message = $pay->message; //transaction message 
+                                        if ($status = 1) {
+                                            //if the payment status was succesfull
+                                            $employeeid = $_POST['employeeid'];
+                                        $description = $_POST['description'];
+                                        $customerid = $_POST['customerid'];
+                                        $phone = $_POST['phone'];
+                                        $billid = $_GET['billid'];
+                                        $updatebill = mysqli_query($conn, "UPDATE billing SET EmployeeId='$employeeid' , CustomerId='$customerid', Description= '$description', Status = '1'  WHERE BillingId='$billid'");
+                                        $selectcontract = mysqli_query($conn, "SELECT * FROM contracts WHERE EmployeeId = $employeeid AND status != 0 ORDER BY ContractId DESC");
+                                        $contract = mysqli_fetch_array($selectcontract);
+                                        $jobpercentage = $contract['JobPercentage'];
+                                        $frequency = $contract['PaymentFrequency'];
+                                        $length = $contract['Length'];
+
+                                        $selectfee = mysqli_query($conn, "SELECT ServiceFee from billing WHERE BillingId = $billid");
+                                        $fees = mysqli_fetch_array($selectfee);
+                                        $fee = $fees['ServiceFee'];
+                                        $subpercentage = $fee * $jobpercentage;
+                                        $percentage = $subpercentage / 100;
+                                        $today = date("Y-m-d");
+                                        $mon = date("m");
+                                        //select current salary
+                                        $selectsalary = mysqli_query($conn, "SELECT * FROM salaries WHERE EmployeeId = $employeeid ORDER BY SalaryId DESC");
+                                        $lastsalary = mysqli_fetch_array($selectsalary);
+                                        if (!empty($lastsalary)) {
+                                            $fromdate = $lastsalary['FromDate'];
+                                            $from = new DateTime($fromdate);
+                                            $now = new DateTime($today);
+                                            $interval = $from->diff($now);
+                                            $days = $interval->days;
+                                            $salaryid = $lastsalary['SalaryId'];
+                                            $currentamount = $lastsalary['Amount'];
+                                            if ($days < $length) {
+                                                $newamount = $currentamount + $percentage;
+                                                $updatesalary = mysqli_query($conn, "UPDATE salaries SET Amount = '$newamount' WHERE SalaryId = '$salaryid' ");
+
+                                            } else {
+                                                $savenewsalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate,Mon, Status) VALUES ('$employeeid', '$percentage', '$today','$mon', '0')");
+
+
+                                            }
+                                        } else {
+                                            $savesalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate,Mon, Status) VALUES ('$employeeid', '$percentage', '$today','$mon', '0')");
+
+                                        }
+
+                                        $a = mysqli_query($conn, "SELECT * FROM billinginfo WHERE BillingId = $billid");
+                                        while ($b = mysqli_fetch_array($a)) {
+                                            $pro = $b['ProductId'];
+                                            $quantity = $b['Quantity'];
+                                            $selectquantity = mysqli_query($conn, "SELECT Quantity FROM products WHERE ProductId = $pro");
+                                            $available = mysqli_fetch_array($selectquantity);
+                                            $insto = $available['Quantity'];
+                                            $remaining = $insto - $quantity;
+                                            $update = mysqli_query($conn, "UPDATE products SET Quantity = '$remaining' WHERE ProductId = $pro");
+
+                                        }
+
+                                        echo "<script> window.location='bill.php?billid=$billid'; </script>";
+
+
+                                    
+
+                                      
+                                        } else {
+                                            echo "<script>window.alert('transaction was not successfuly sent'); window.location='ticket.php?total=$total&normals=$normals&vips=$vips&eventid=$eventid'; </script>";
+
+                                        }
+                                    }
+
+
+
+
+
+
+                                        
                                     ?>
                                 </div>
                             </div>

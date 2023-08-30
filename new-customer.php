@@ -102,7 +102,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <div class="control-group">
                                             <label class="control-label" for="basicinput">Customer name</label>
                                             <div class="controls">
-                                                <input type="text" name="customername" placeholder="Enter Product Name"
+                                                <input type="text" name="customername" placeholder="Enter customer Name"
                                                     class="span8 tip" required>
 
                                             </div>
@@ -112,7 +112,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <div class="control-group">
                                             <label class="control-label" for="basicinput">Phone number</label>
                                             <div class="controls">
-                                                <input type="number" name="phone" placeholder="Enter Phone number"
+                                                <input type="text" minlength="10" maxlength="10" name="phone"  placeholder="Enter Phone number"
                                                     class="span8 tip" required> *for payment(07********)
                                             </div>
                                         </div>
