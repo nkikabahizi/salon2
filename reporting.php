@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('include/config.php');
+
 if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
@@ -84,18 +85,22 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<?php } ?>
 
 									<br />
-
-									<form class="form-horizontal row-fluid" name="Category" method="post">										
+									<?php if(!empty($_GET['saved']))
+								{
+								}
+								else{
+									?>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Select Month</label>
 											<div class="controls">
 												<select name="mon" class="span3 tip" required id="month">
+													<option value="">Choose an incidence</option>
 													<option value="expense">Expense</option>
 													<option value="rent">Rent</option>
 												</select>
 											</div>
 										</div>
-									</form>
+										<?php }  ?>
 								</div>
 							</div>
 							<?php
@@ -111,66 +116,15 @@ if (strlen($_SESSION['alogin']) == 0) {
 							?>
 
 
-							<div class="module" id="report" <?php echo @$ishidden; ?>>
-								<div class="module-head">
-									<h3>Review</h3>
-								</div>
-								<div class="module-body table">
-									<table cellpadding="0" cellspacing="0" border="0"
-										class="datatable-1 table table-bordered table-striped	 display" width="100%">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>Deductions</th>
-												<th>Loans</th>
-												<th>Salary</th>
-											</tr>
-										</thead>
-										<tbody>
-
-											<?php
-											$salonid = $_SESSION['salonid'];
-											$employeeid = $_GET['id'];
-											$query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Status != 0");
-											$cnt = 1;
-											while ($row = mysqli_fetch_array($query)) {
-												?>
-												<tr>
-													<td>
-														<?php echo htmlentities($cnt); ?>
-													</td>
-													<td>
-														<?php $selectdeductions = mysqli_query($conn, "select * from deductions WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
-														$totaldeductions=0;
-														while($deductions = mysqli_fetch_array($selectdeductions))
-														{
-															$totaldeductions=$totaldeductions + $deductions['Amount'];
-														}
-
-														echo $totaldeductions; ?>
-													</td>
-													<td>
-													<?php $selectloans = mysqli_query($conn, "select * from loans WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
-														$totalloans=0;
-														while($loans = mysqli_fetch_array($selectloans))
-														{
-															$totalloans=$totalloans + $loans['Amount'];
-														}
-
-														echo $totalloans; ?>
-													</td>
-													<td>
-														<?php echo $row['Amount']; ?>
-													</td>
-													
-												</tr>
-												<?php $cnt = $cnt + 1;
-											} ?>
-
-									</table>
-								</div>
+							<div class="module" id="report" >
+								<?php if(!empty($_GET['saved']))
+								{
+									echo "<h3>Incident reported successful  <a href='reporting.php'><utton class='btn btn-lg btn-primary'><span class='icon-home'></span></button></a></h3>";
+								}
+								?>
+								
 							</div>
-                            /////
+                        
 
 
 
@@ -199,31 +153,112 @@ if (strlen($_SESSION['alogin']) == 0) {
 			$(document).ready(function () {
 				$('#month').on('change', function () {
 					var type = this.value;
+					const currentDate = new Date();
+					const currentMonth = currentDate.getMonth();
+					const mon = currentMonth + 1;
 					if(type == 'expense')
                     {
                         $.ajax({
-						url: "include/helper.php",
+						url: "expense.php",
 						type: "POST",
 						data: {
-							cell_id: cell_id,
-							target: 'get_village'
+							mon:mon,	
+							target: 'expense'
 						},
 						cache: false,
 						success: function (result) {
-							$("#select_village").html(result);
+							$("#report").html(result);
 						}
 					});
                         
 
                     }
-                    else{
-                        alert('Rent');
+                    if(type == 'rent'){
+                        
+						$.ajax({
+						url: "rent.php",
+						type: "POST",
+						
+
+						data: {
+							mon:mon,							
+							target: 'getrent'
+						},
+						cache: false,
+						success: function (result) {
+							$("#report").html(result);
+						}
+					});
 
 
                     }
+					if(type == '')
+					{
+						$.ajax({
+						url: "selectreport.php",
+						type: "POST",
+						
+
+						data: {						
+							target: 'select'
+						},
+						cache: false,
+						success: function (result) {
+							$("#report").html(result);
+						}
+					});
+
+						
+
+					}
 				});
 			});
 		</script>
+		<?php 
+		if (isset($_POST['save']))
+		{
+			$desc=$_POST['description'];
+			$salonid=$_SESSION['salonid'];
+			$amount=$_POST['amount'];
+			$mon=date('m');
+			$salonid=$_SESSION['salonid'];
+			$dates=date('d/m/Y');
+			$type='Expense';
+			$saveexpense=mysqli_query($conn, "INSERT INTO expenses(Description,Amount,Typee,Mon,Dates,SalonId) VALUES ('$desc','$amount','$type','$mon','$dates','$salonid')");
+			if($saveexpense == 1)
+			{
+				
+			echo "<script>window.location='reporting.php?saved=ok'</script>";
+			}
+			else{
+				
+			echo "<script>window.alert('Failed')</script>";
+			}
+		   
+		}
+		if (isset($_POST['saverent'])) {
+			$month = $_POST['month'];
+			$amount = $_POST['amount'];
+			$description = $_POST['description'];
+			$type = 'Rent';
+			$mon = date('m');
+			$dates = date('d/m/Y');
+			$salonid = $_SESSION['salonid'];
+			$saverent = mysqli_query($conn, "INSERT INTO `expenses` (`Description`, `Amount`, `Typee`, `Mon`, `Dates`, `SalonId`) VALUES ('$description' ,'$amount', '$type', '$mon', '$dates', '$salonid')");
+			if($saverent == 1)
+			{
+				
+			echo "<script>window.location='reporting.php?saved=ok'</script>";
+			}
+			else{
+				
+			echo "<script>window.alert('Failed')</script>";
+			}
+		}
+		?>
+		
+		
 
 	</body>
 <?php } ?>
+

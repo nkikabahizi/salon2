@@ -188,9 +188,6 @@ if (strlen($_SESSION['alogin']) == 0) {
 										case '12':
 											$monthname = 'December';
 											break;
-
-
-
 										default:
 											$mon = date('m');
 											break;

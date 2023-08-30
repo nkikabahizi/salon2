@@ -144,15 +144,9 @@
 				</a>
 				<ul id="togglefinance" class="collapse unstyled">
 					<li>
-						<a href="manage-products.php">
-							<i class="icon-tasks"></i>
-							Net profit
-						</a>
-					</li>
-					<li>
 					<a href="managesallaries.php?mon=<?php echo date('m'); ?>">
 							<i class="icon-tasks"></i>
-							Payroll
+							Net profit
 						</a>
 					</li>
 
