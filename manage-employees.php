@@ -129,7 +129,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Phone number</label>
 											<div class="controls">
-												<input type="number" minlength="10" maxlength="10" placeholder="Enter contacts" name="contacts"
+												<input type="text" minlength="10" maxlength="10" placeholder="Enter contacts" name="contacts"
 													class="span8 tip" required>
 											</div>
 										</div>
