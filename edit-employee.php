@@ -84,7 +84,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									<br />
 
-									<form class="form-horizontal row-fluid" name="Category" method="post">
+									<form class="form-horizontal row-fluid" name="Category" method="post" id="FORM">
 
 										
 												<?php
@@ -117,15 +117,15 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Id Number</label>
 											<div class="controls">
-												<input type="number" placeholder="Enter ID" name="id" value="<?php echo $row['IdNumber']; ?>" class="span8 tip"
-													required>
+												<input type="number" id="idnumber" placeholder="Enter ID" name="id" value="<?php echo $row['IdNumber']; ?>" class="span8 tip"required>
+													<span id="erro" style="color: red;"></span>
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Phone number</label>
 											<div class="controls">
-												<input type="number" placeholder="Enter contacts" name="contacts"  value="<?php echo $row['Contacts']; ?>"
-													class="span8 tip" required>
+												<input type="number" id="contacts" placeholder="Enter contacts" name="contacts"  value="<?php echo $row['Contacts']; ?>"class="span8 tip" required>
+												<span id="error" style="color: red;"></span>
 											</div>
 										</div>
 										<div class="control-group">
@@ -178,5 +178,28 @@ if (strlen($_SESSION['alogin']) == 0) {
 				$('.dataTables_paginate > a:last-child').append('<i class="icon-chevron-right shaded"></i>');
 			});
 		</script>
+		 <script>
+            document.getElementById("FORM").addEventListener("submit",function(event){
+                var phoneInput = document.getElementById("contacts");
+                var idnumberInput = document.getElementById("idnumber");
+				var erroSpan = document.getElementById("erro");
+                var errorSpan = document.getElementById("error");
+        
+                if(phoneInput.value.length !==10){
+                    errorSpan.textContent ="phone number must be exactly 10 digits.";
+                    event.preventDefault();
+                }
+                else {
+                    errorSpan.textContent= "";
+                }
+				if(idnumberInput.value.length !==16){
+                    erroSpan.textContent ="ID Number must be exactly 16 digits.";
+                    event.preventDefault();
+                }
+                else {
+                    erroSpan.textContent= "";
+                }
+            });
+        </script>
 	</body>
 <?php } ?>

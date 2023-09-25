@@ -135,7 +135,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Contacts</label>
 											<div class="controls">
-												<input type="number" placeholder="Enter phone number" name="contacts" class="span8 tip"
+												<input type="text" minlength="10" maxlength="13" placeholder="Enter phone number" name="contacts" class="span8 tip"
 													required>
 											</div>
 										</div>
@@ -156,8 +156,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Password</label>
 											<div class="controls">
-												<input type="password" placeholder="Enter password here" name="password"
-													class="span8 tip" required>
+												<input type="password" placeholder="Enter password here" name="password"class="span8 tip" required>
 											</div>
 										</div>
 
@@ -173,7 +172,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 							<div class="module">
 								<div class="module-head">
-									<h3>Manage Employees</h3>
+									<h3>Manage Users</h3>
 								</div>
 								<div class="module-body table">
 									<table cellpadding="0" cellspacing="0" border="0"

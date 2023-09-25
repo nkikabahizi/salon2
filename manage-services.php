@@ -109,7 +109,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									<br />
 
-									<form class="form-horizontal row-fluid" name="insertproduct" method="post"
+									<form class="form-horizontal row-fluid" name="insertsercive" method="post"
 										enctype="multipart/form-data">
 
 										<div class="control-group">
@@ -131,7 +131,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Service Name</label>
 											<div class="controls">
-												<input type="text" name="name" placeholder="Enter Product Name"
+												<input type="text" name="name" placeholder="Enter service Name"
 													class="span8 tip" required>
 											</div>
 										</div>
@@ -139,7 +139,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Price</label>
 											<div class="controls">
-												<input type="number" name="price" placeholder="Enter market value"
+												<input type="number" name="price" placeholder="Enter service price"
 													class="span8 tip" required>
 											</div>
 										</div>
@@ -149,7 +149,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Service Description</label>
 											<div class="controls">
-												<textarea name="description" placeholder="Enter Product Description"
+												<textarea name="description" placeholder="Enter service Description"
 													rows="6" class="span8 tip">
 									</textarea>
 											</div>
@@ -160,7 +160,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Service Availability</label>
 											<div class="controls">
-												<select name="availability" id="productAvailability" class="span8 tip"
+												<select name="availability" id="serviceAvailability" class="span8 tip"
 													required>
 													<option value="">Select</option>
 													<option value="Available">Available</option>
@@ -191,7 +191,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 							</div>
 							<div class="module">
 								<div class="module-head">
-									<h3>Products</h3>
+									<h3>Services</h3>
 								</div>
 								<div class="module-body table">
 									<table cellpadding="0" cellspacing="0" border="0"

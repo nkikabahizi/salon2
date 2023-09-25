@@ -175,7 +175,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<?php echo htmlentities($row['fullName']); ?>
 											</td>
 											<td>
-												<?php echo $row['Name']; ?>
+												<?php echo $row['Price']; ?>
 											</td>
 											<td>
 												<ul>
@@ -236,6 +236,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									</tr>
 								</tbody>
 							</table>
+							<a href="monthly-bills-report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>
 						</div>
 					</div>
 

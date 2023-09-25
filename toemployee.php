@@ -4,6 +4,8 @@ include('include/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
+	date_default_timezone_set('Asia/Kolkata'); // change according timezone
+	$currentTime = date('d-m-Y h:i:s A', time());
 
 
 
@@ -145,6 +147,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<thead>
 											<tr>
 												<th>#</th>
+												<th>Dates</th>
 												<th>Deductions</th>
 												<th>Loans</th>
 												<th>Salary</th>
@@ -161,10 +164,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
 												$paymentstatus=$row['Status'];
+												 @$totalpayout=$totalpayout + $row['Amount'];
 												?>
 												<tr>
 													<td>
 														<?php echo htmlentities($cnt); ?>
+													</td>
+													<td>
+														<?php echo $row['FromDate']; ?>
 													</td>
 													<td>
 														<?php $selectdeductions = mysqli_query($conn, "select * from deductions WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
@@ -189,6 +196,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 													<td>
 														<?php echo $row['Amount']; ?>
 													</td>
+													
 													<td>
 														<?php 
 														if($paymentstatus != 1)
@@ -210,9 +218,20 @@ if (strlen($_SESSION['alogin']) == 0) {
 													
 												</tr>
 												<?php $cnt = $cnt + 1;
-											} ?>
+											}
+											$employeeid=$_GET['id'];
+											$mon=$_GET['mon'];
+											 ?>
+											 <tfoot>
+										     <tr>
+											  <td></td><td><b>Total Payouts</b></td><td></td><td></td><td><?php echo @$totalpayout ." RWF"; ?></td><td></td><td></td>
+
+											  </tr>
+										     </tfoot>
 
 									</table>
+									
+									<a href="report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>
 								</div>
 							</div>
 

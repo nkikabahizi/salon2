@@ -55,7 +55,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 							<div class="module">
 								<div class="module-head">
-									<h3>New User</h3>
+									<h3>New Salon</h3>
 								</div>
 								<div class="module-body">
 

@@ -328,11 +328,10 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $transID = uniqid();
                                         $calback = "";
                                         $price=$_POST['totalbill'];
-                                        
+                                        $phone=$_POST['phone'];                                        
                                         hdev_payment::api_id("HDEV-48d87cf2-c648-49c1-9c7c-a1a12dbc30eb-ID"); //send the api ID to hdev_payment
                                         hdev_payment::api_key("HDEV-79d8e552-5bed-4f5a-9551-cd051e32e406-KEY"); //send the api KEY to hdev_payment
-                                        $pay = hdev_payment::pay($phone, $price, $transID, $calback); //finishing the transaction 
-                                
+                                        $pay = hdev_payment::pay($phone, $price, $transID, $calback); //finishing the transaction                                 
                                         //var_dump($pay);//to get payment server response
                                         $status = $pay->status; //get transaction status if sent or not
                                         $message = $pay->message; //transaction message 
@@ -381,6 +380,39 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             $savesalary = mysqli_query($conn, "INSERT INTO salaries(EmployeeId, Amount,FromDate,Mon, Status) VALUES ('$employeeid', '$percentage', '$today','$mon', '0')");
 
                                         }
+
+                                        //FETCHING EMPLOYEE INFO TO SEND MESSAGE
+                                        $employeeid=$_POST['employeeid'];
+                                        $selectemployees = mysqli_query($conn, "SELECT employees.Contacts,employees.FullName,salon.Name FROM employees,salon WHERE salon.SalonId=employees.SalonId AND employees.EmployeeId = $employeeid");
+                                        while ($emp = mysqli_fetch_array($selectemployees)) {
+                                            $hisphone=$emp['Contacts'];
+                                            $names=$emp['FullName'];
+                                            $salonname=$emp['Name'];
+                                        }
+                                        $dates=date("d/m/Y");
+
+                                        $data = array(
+                                            "sender" => 'INNOVATESLN',
+                                            "recipients" => $hisphone,
+                                            "message" => "Dear " . $names . " your sallary was increased with your persentage cut on " .$dates. "your percentage was: ".$percentage. " ".$salonname,
+                                            "dlrurl" => ""
+                                        );
+                                        $url = "https://www.intouchsms.co.rw/api/sendsms/.json";
+                                        $data = http_build_query($data);
+                                        $username = "innovate.solutions";
+                                        $password = "innovate.solutions";
+                                        $ch = curl_init();
+                                        curl_setopt($ch, CURLOPT_URL, $url);
+                                        curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . $password);
+                                        curl_setopt($ch, CURLOPT_POST, true);
+                                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                                        $result = curl_exec($ch);
+                                        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                                        curl_close($ch);
+                                        echo $result;
+                                        echo $httpcode;
 
                                         $a = mysqli_query($conn, "SELECT * FROM billinginfo WHERE BillingId = $billid");
                                         while ($b = mysqli_fetch_array($a)) {

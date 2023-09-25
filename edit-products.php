@@ -155,12 +155,12 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 
 											<div class="control-group">
-												<label class="control-label" for="basicinput">Product Description</label>
+												<label class="control-label" for="basicinput">Product Expired Date</label>
 												<div class="controls">
-													<textarea name="productDescription" placeholder="Enter Product Description"
-														rows="6" class="span8 tip">
-						<?php echo htmlentities($row['Description']); ?>
-						</textarea>
+													<input type="date" name="productDescription" placeholder="Enter Product Description"
+														value="<?php echo htmlentities($row['Description']); ?>" class="span8 tip" required>
+														
+						
 												</div>
 											</div>
 

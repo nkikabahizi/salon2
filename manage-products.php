@@ -168,11 +168,11 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Product Description</label>
+											<label class="control-label" for="basicinput">Product Expired Date </label>
 											<div class="controls">
-												<textarea name="description" placeholder="Enter Product Description"
-													rows="6" class="span8 tip">
-									</textarea>
+												<input type="date" name="description" placeholder="Enter Product Expired Date"
+													class="span8 tip">
+									
 											</div>
 										</div>
 
@@ -226,8 +226,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<th>Brand</th>
 												<th>Unit Price</th>
 												<th>Quantity</th>
+												<th>Expired Date</th>
 												<th>Availability</th>
-												<th>Image</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -260,14 +260,17 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<?php echo htmlentities($row['Quantity']); ?>
 													</td>
 													<td>
+														<?php echo htmlentities($row['Description']); ?>
+													</td>
+													<td>
 														<?php echo htmlentities($row['Status']); ?>
 													</td>
 													
-													<td>
+													<!-- <td>
 														<img src="productimages/<?php echo htmlentities($pid); ?>/<?php echo htmlentities($row['ExampleProfile']); ?>"
 															width="200" height="100">
 
-													</td>
+													</td> -->
 													<td>
 														<a
 															href="edit-products.php?id=<?php echo $row['ProductId'] ?>&frompage=manage-products.php"><i
@@ -281,6 +284,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											} ?>
 
 									</table>
+									<a href="product-report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>
 								</div>
 							</div>
 

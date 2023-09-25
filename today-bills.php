@@ -118,7 +118,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 																
 																	?>
 																	<li>
-																		<?php echo $billinfo['Name'] . "(" . $billinfo['Quantity'] . ")"; ?>
+																		<?php echo $billinfo['Name'] . "(" . $billinfo['Quantity'] . ")". "(" . $billinfo['Price'] . ")"; ?>
 																	</li>
 
 																	<?php 

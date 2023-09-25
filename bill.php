@@ -63,18 +63,25 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 </div>
 
                                 <div class="module-body" style="text-align:left">
-                                    <b>Bill Id-----------</b>
+                                    <b>Bill Numbber-----------</b>
                                     <?php echo "HDSMS/" . $info['BillingId']; ?><br><br>
-                                    <b>Dates-----------</b>
-                                    <?php echo $info['Dates']; ?><br><br>
-                                    <b>Names-----------</b>
+                                    <b>Date of Bill-----------</b>
+                                    <?php echo $info['DateBill']; ?><br><br>
+                                    <b>Name of Customer-----------</b>
                                     <?php echo $info['fullName']; ?><br><br>
+                                  
+                                    <b>Name of Employee ----------</b>
+                                        <?php echo $info['FullName'] . "  (" . $info['Poste'] . ")"; ?><br>
+
+
+                                    <br>
+                            
                                     <b>Service-----------</b>
                                     <?php $selectservice = mysqli_query($conn, "SELECT * FROM services WHERE ServiceId = $serviceid");
                                     $serv = mysqli_fetch_array($selectservice);
-                                    echo $serv['Name']; ?>
-                                    --- Service Fee:
-                                    <?php echo $info['ServiceFee']; ?><br><br>
+                                    echo $serv['Name']; ?><br><br>
+                                   <b>Service Fee:-----------</b>
+                                    <?php echo $info['ServiceFee'] . "RWF"; ?><br><br>
                                     <b>Products ----------</b>
                                     <?php $selectbillinfo = mysqli_query($conn, "SELECT * FROM billinginfo WHERE BillingId = $billid");
                                     $totalproducts = 0;
@@ -83,7 +90,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $selectproduct=mysqli_query($conn, "SELECT * FROM products WHERE ProductId = $productid ");
                                     while ($products = mysqli_fetch_array($selectproduct)) {
                                         $unitprice=$products['Price'];
-                                        echo $products['Name'] ."(".$billinfo['Quantity'] .")";
+                                        echo $products['Name']. "(".$billinfo['Quantity'] .")" ;
 
                                     }
                                     echo ",";
@@ -92,16 +99,34 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                         $subtotal=$unitprice * $billinfo['Quantity'];
                                         $totalproducts = $subtotal + $totalproducts;
+                                        
                                     }
-                                    ?><br>
-                                    <b>----------------------------------------------------------------------------</b><br><br>
+                                    ?>
+                                    <br><br>
+                                    <b>Price ----------</b>
+                                    <?php echo $info['TotalProducts']. "RWF"; ?>
+                                  <br><br>
+                                    
+                            
                                     <b>
-                                        <?php echo "<b>" . $totalproducts + $info['ServiceFee'] . "RWF</b>"; ?><br><br>
-                                        <b>-------</b>
-                                        <?php echo $info['FullName'] . "  (" . $info['Poste'] . ")"; ?>---------<br><br>
+                                    Total Bill: <b>-----------------</b>      <?php echo "<b>" . $totalproducts + $info['ServiceFee'] . "RWF</b>"; ?><br><br>
+                                        
+                                    <b>----------------------------------------------------------------------------------------------</b>
 
+                                    <?php
+                                     $userid = $_SESSION['id'];
+                                     $selectuserinfo = mysqli_query($conn, "SELECT * FROM users,salon WHERE users.SalonId = salon.SalonId AND users.UserId=$userid");
+                                     $info = mysqli_fetch_array($selectuserinfo);
 
-
+                                    ?>
+                                    <br><br>
+                                    <p><i>Done at <?php echo $info['Location'] ?> <br>
+                                    <?php echo "Operation Manager <b> ".$info['FullName']. "</b> At ". $info['Name']; ?>
+                                    <br><br>
+                                    Stamp and Signature .................................
+                                    <br><br>
+                                    
+                                    
 
 
 

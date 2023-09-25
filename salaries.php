@@ -238,11 +238,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<tbody>
 
 											<?php
+											$mon = $_GET['mon'];
+											$total = 0;
 											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select * from payroll,users WHERE payroll.UserId = users.UserId AND users.SalonId = $salonid AND payroll.Month = '$mon' ");
+											$query = mysqli_query($conn, "SELECT * FROM  payroll,users WHERE payroll.UserId = users.UserId AND users.SalonId = $salonid AND payroll.Month = $mon ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
 												@$totalpayout=$totalpayout + $row['Amount'];
+												@$payid = $row['PayId'];
 												?>
 												<tr>
 													<td>
@@ -263,9 +266,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 													<td>
 														<?php echo htmlentities($row['FullName']); ?>
 													</td>
-													<td>
-														<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
-																class="icon-eye-open"></i></a>
+													<td> <a href="payroll.php?PayId=<?php echo $PayId; ?>" title="Update order"
+															target="_blank"><i class="icon-eye-open"></i></a>
 													</td>
 												</tr>
 												<?php $cnt = $cnt + 1;
@@ -280,7 +282,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 										</tfoot>
 
 									</table>
-									
+									<a href="salary-report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>
+								</div>
 								</div>
 							</div>
 

@@ -8,7 +8,7 @@ if (isset($_POST['submit'])) {
 	$ret = mysqli_query($conn, "SELECT * FROM users WHERE UserName='$username' and Password='$password'");
 	$num = mysqli_fetch_array($ret);
 	if ($num > 0) {
-		$extra = "change-password.php";
+		$extra = "newbill.php";
 		$_SESSION['alogin'] = $_POST['username'];
 		$_SESSION['id'] = $num['UserId'];
 		$_SESSION['salonid'] = $num['SalonId'];
@@ -118,7 +118,7 @@ if (isset($_POST['submit'])) {
 		<div class="container">
 
 
-			<b class="copyright">&copy; 2023 NKIKABAHIZI kenny </b> UNILAK.
+			<b class="copyright">&copy; 2023 NKIKABAHIZI Emmanuel </b> UNILAK.
 		</div>
 	</div>
 	<script src="scripts/jquery-1.9.1.min.js" type="text/javascript"></script>

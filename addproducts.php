@@ -246,7 +246,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 		                                $day = date('d', time());
 		                                $mon = date('m', time());
 		                                $year = date('Y', time());
-                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,TotalProducts,EmployeeId,CustomerId,Description,SalonId,Dates,Day,Mon,Year,Status  ) values ('$serviceid','$servicefee','$total','0','0',' ','$salonid','$date','$day','$mon','$year', '0')");
+                                        $save = mysqli_query($conn,"insert into billing(ServiceId,ServiceFee,EmployeeId,CustomerId,Description,SalonId,Dates,Day,Mon,Year,Status  ) values ('$serviceid','$servicefee','0','0',' ','$salonid','$date','$day','$mon','$year', '0')");
                                         if($save == 1)
                                         {
                                             @$billingid = $conn->insert_id; 

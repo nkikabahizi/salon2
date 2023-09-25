@@ -119,7 +119,7 @@ if (isset($_POST['submit'])) {
 		<div class="container">
 
 
-			<b class="copyright">&copy; 2023 NKIKABAHIZI Kenny</b> UNILAK.
+			<b class="copyright">&copy; 2023 NKIKABAHIZI Emmanuel</b> UNILAK.
 		</div>
 	</div>
 	<script src="scripts/jquery-1.9.1.min.js" type="text/javascript"></script>

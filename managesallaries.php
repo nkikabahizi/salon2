@@ -216,6 +216,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											</center>
 										</div>
 									</div>
+								
 									<div class="span2">
 										<div class="well">
 											<div class="square square-sm"
@@ -234,6 +235,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											</center>
 										</div>
 									</div>
+
 								</div>
 
 								<div class="control-group">
@@ -287,7 +289,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$cnt = 1;
 											$totalexpense = 0;
 											while ($row = mysqli_fetch_array($selectexpenses)) {
-												$subtotall = $row['Amount'] + $row['Amount'];
+												$subtotall = $row['Amount'];
 												@$totalexpense = $totalexpense + $subtotall;
 											}
 											
@@ -317,7 +319,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											<?php echo $totalsalaries . " RWF"; ?>
 										</td>
 										<td>
-										<?php echo $totalexpense . " RWFrr"; ?>
+										<?php echo $totalexpense . " RWF"; ?>
 											
 										</td>
 										<td>
@@ -336,7 +338,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 								</tfoot>
 
 							</table>
-
+							<a href="wages-report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>
 						</div>
 					</div>
 
