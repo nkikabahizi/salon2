@@ -13,7 +13,7 @@ if (strlen($_SESSION['alogin']) == 0) {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>HDSMS| Today's bills'</title>
+        <title>HDSMS|Purchase Sales</title>
         <link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -57,7 +57,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <?php echo $salonname; ?>
                                     </h3>
                                     <h3>
-                                         Repport of Product 
+                                         Repport of Purchase Sales
                                     </h3>
                                 </div>
                                 <div class="module-body" style="text-align:left">
@@ -68,34 +68,39 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                     ?></h3></b><br><br><br>
 
-                                <b>Dates</b>--------------<?php echo date('d-m-Y h:i:s A', time()); ?><br><br>
+                                <b>Dates</b>--------------<?php echo date('d-m-Y'); ?><br><br>
                                 <b>User</b>--------------<?php echo $info['FullName']; ?>
 
                                 <br><brr><br>
                                 <div class="module-body table">
                                 <table cellpadding="0" cellspacing="0" border="0"
 										class="table table-bordered table-striped	 display" width="100%">
+										<thead>
 											<tr>
 
-												<th>#</th>
-												<th>Name</th>
-												<th>Category</th>
-												<th>Brand</th>
-												<th>Unit Price</th>
+												<th>No</th>
+												<th>Product</th>
+												<th>Unit price</th>
 												<th>Quantity</th>
-												<th>Expired Date</th>
-												<th>Availability</th>
-											
+												<th>Total</th>
+												
+												<th>Purchase Dates</th>
 											</tr>
 										</thead>
 										<tbody>
 
 											<?php
 											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select * from products WHERE SalonId = '$salonid' ");
+											$query = mysqli_query($conn, "select purchases.Quantity,products.Name,Purchases.Description,purchases.UnitPrice,purchases.PurchaseId,purchases.PurchaseDates FROM purchases,products where products.ProductId=purchases.ProductId AND  purchases.SalonId = '$salonid' ORDER BY purchases.PurchaseId ");
 											$cnt = 1;
+											$total=0;
 											while ($row = mysqli_fetch_array($query)) {
-												$pid = $row['ProductId'];
+												$pid = $row['PurchaseId'];
+												$subtotal = $row['UnitPrice'] * $row['Quantity'];
+										        @$totalpurchase = $totalpurchase + $subtotal;
+                                                @$total += $row['Quantity'];
+
+												
 												?>
 												<tr>
 													<td>
@@ -105,43 +110,31 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<?php echo htmlentities($row['Name']); ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['Category']); ?>
+														<?php echo htmlentities($row['UnitPrice']) . " RWF"; ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['Manufacture']); ?>
+														<?php echo htmlentities($row['Quantity']) . " QT"; ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['Price'])."RWF"; ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Quantity']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Description']); ?>
-													</td>
-													<td>
-														<?php echo htmlentities($row['Status']); ?>
+														<?php echo $subtotal; ?>
 													</td>
 													
-													<!-- <td>
-														<img src="productimages/<?php echo htmlentities($pid); ?>/<?php echo htmlentities($row['ExampleProfile']); ?>"
-															width="200" height="100">
+													<td>
+														<?php echo htmlentities($row['PurchaseDates']); ?>
+													</td>
 
-													</td> -->
-													<!-- <td>
-														<a
-															href="edit-products.php?id=<?php echo $row['ProductId'] ?>&frompage=manage-products.php"><i
-																class="icon-edit"></i></a>
-														<a href="manage-products.php?id=<?php echo $row['ProductId']?>&del=delete"
-															onClick="return confirm('Are you sure you want to delete?')"><i
-																class="icon-remove-sign"></i></a>
-													</td> -->
 												</tr>
 												<?php $cnt = $cnt + 1;
-											} ?>
+											} ?>										
+										</tbody>
+										<tfoot>
+										<tr>
+											<td></td><td><b>Total sales purchase</b></td><td></td><td><?php echo @$total ." QT"; ?></td><td><?php echo @$totalpurchase ." RWF"; ?></td><td></td>
 
+											</tr>
+										</tfoot>
+										
 									</table>
-								</div>
                                     <?php
                                      $userid = $_SESSION['id'];
                                      $selectuserinfo = mysqli_query($conn, "SELECT * FROM users,salon WHERE users.SalonId = salon.SalonId AND users.UserId=$userid");

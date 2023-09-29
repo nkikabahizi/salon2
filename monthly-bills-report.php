@@ -33,15 +33,15 @@ if (strlen($_SESSION['alogin']) == 0) {
     </head>
 
     <body>
-        <?php
-            $salonid=$_SESSION['salonid'];
-            $query = mysqli_query($conn, "select * FROM salon WHERE SalonId= '$salonid' ");
-            $cnt = 1;
-            while ($row = mysqli_fetch_array($query)) {
-                $salonname=$row['Name'];
-            }
+                                     <?php
+                                     $salonid=$_SESSION['salonid'];
+                                     $query = mysqli_query($conn, "select * FROM salon WHERE SalonId= '$salonid' ");
+                                     $cnt = 1;
+                                     while ($row = mysqli_fetch_array($query)) {
+                                      $salonname=$row['Name'];
+                                            }
 
-        ?>
+                                    ?>
 
         <center><div class="wrapper" style="background:white; width:700px">
         <div class="module-head" style="text-align:center">
@@ -51,9 +51,21 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <?php echo $salonname; ?>
                                     </h3>
                                     <h3>
-                                         Repport of <?php echo $_GET['month']."/2023"; ?>
+                                         Repport of <?php echo date('m/Y', time()); ?>
                                     </h3>
                                 </div>
+                                <div class="module-body" style="text-align:left">
+                                <b> <h3 style="text-align:center;"> <?php
+                                     $userid = $_SESSION['id'];
+                                     $selectuserinfo = mysqli_query($conn, "SELECT * FROM users,salon WHERE users.SalonId = salon.SalonId AND users.UserId=$userid");
+                                     $info = mysqli_fetch_array($selectuserinfo);
+
+                                    ?></h3></b><br><br><br>
+
+                                <b>Dates</b>--------------<?php echo date('d-m-Y h:i:s A', time()); ?><br><br>
+                                <b>User</b>--------------<?php echo $info['FullName']; ?>
+
+                                <br><brr><br>
                                 <div class="module-body table">
                                 <table cellpadding="0" cellspacing="0" border="0"
 										class="table table-bordered table-striped	 display" width="100%">

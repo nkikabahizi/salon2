@@ -160,7 +160,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$salonid = $_SESSION['salonid'];
 											$employeeid = $_GET['id'];
 											$mon=$_GET['mon'];
-											$query = mysqli_query($conn, "select * from salaries WHERE EmployeeId = '$employeeid' AND Mon = '$mon' ");
+											$query = mysqli_query($conn, "SELECT * from salaries WHERE EmployeeId = '$employeeid' AND Mon = '$mon' ");
 											$cnt = 1;
 											while ($row = mysqli_fetch_array($query)) {
 												$paymentstatus=$row['Status'];
@@ -174,7 +174,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<?php echo $row['FromDate']; ?>
 													</td>
 													<td>
-														<?php $selectdeductions = mysqli_query($conn, "select * from deductions WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
+														<?php $selectdeductions = mysqli_query($conn, "SELECT * from deductions WHERE EmployeeId = $employeeid AND Mon= $mon ");
 														$totaldeductions=0;
 														while($deductions = mysqli_fetch_array($selectdeductions))
 														{
@@ -184,7 +184,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 														echo $totaldeductions; ?>
 													</td>
 													<td>
-													<?php $selectloans = mysqli_query($conn, "select * from loans WHERE EmployeeId = '$employeeid' AND Mon= '$mon' ");
+													<?php $selectloans = mysqli_query($conn, "SELECT * from loans WHERE EmployeeId = $employeeid AND Mon= $mon ");
 														$totalloans=0;
 														while($loans = mysqli_fetch_array($selectloans))
 														{

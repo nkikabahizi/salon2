@@ -113,9 +113,9 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                         <option value="<?php echo htmlentities($row['Category']); ?>"><?php echo htmlentities($row['Category']); ?></option>
                                                         <option value="">Select Category</option>
 													<option value="Hair Dressing">Hair Dressing</option>
-													<option value="Nail dressing">Nail dressing</option>
-													<option value="Make up">Make up</option>
-													<option value="Face Massage">Face Massage</option>
+													<option value="Nail Dressing">Nail Dressing</option>
+													<option value="Make up specialist">Make up specialist</option>
+													
 
                                                     </select>
                                                 </div>
@@ -153,13 +153,13 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             </div>
 
                                             <div class="control-group">
-                                                <label class="control-label" for="basicinput">Product Availability</label>
+                                                <label class="control-label" for="basicinput">Service Availability</label>
                                                 <div class="controls">
-                                                    <select name="availability" id="productAvailability"
+                                                    <select name="availability" id="serviceAvailability"
                                                         class="span8 tip" required>
                                                         <option value="<?php echo htmlentities($row['Status']); ?>">
                                                             <?php echo htmlentities($row['Status']); ?></option>
-                                                            <option value="In Stock">Available</option>
+                                                            <option value="Available">Available</option>
 													<option value="Out of Stock">Out of service</option>
                                                     </select>
                                                 </div>

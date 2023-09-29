@@ -357,7 +357,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         $today = date("Y-m-d");
                                         $mon = date("m");
                                         //select current salary
-                                        $selectsalary = mysqli_query($conn, "SELECT * FROM salaries WHERE EmployeeId = $employeeid ORDER BY SalaryId DESC");
+                                      
+                                        $selectsalary = mysqli_query($conn, "SELECT * FROM salaries WHERE EmployeeId = $employeeid AND salaries.Status != 1 ORDER BY SalaryId DESC");
                                         $lastsalary = mysqli_fetch_array($selectsalary);
                                         if (!empty($lastsalary)) {
                                             $fromdate = $lastsalary['FromDate'];
@@ -365,6 +366,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             $now = new DateTime($today);
                                             $interval = $from->diff($now);
                                             $days = $interval->days;
+                                            $days= $days - 1;
                                             $salaryid = $lastsalary['SalaryId'];
                                             $currentamount = $lastsalary['Amount'];
                                             if ($days < $length) {

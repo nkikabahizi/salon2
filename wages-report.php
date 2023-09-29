@@ -6,7 +6,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 } else {
     $employeeid = $_GET['employeeid'];
     $mon=$_GET['month'];
-    date_default_timezone_set('Asia/Kolkata'); // change according timezone
+    date_default_timezone_set('africa/cairo'); // change according timezone
 	$currentTime = date('d-m-Y h:i:s A', time());
 	$mon = $_GET['month'];
 	$hairdresser = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Hair dresser' ");
@@ -63,13 +63,25 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <?php echo $salonname; ?>
                                     </h3>
                                     <h3>
-                                         Repport of <?php echo $_GET['month']."/2023"; ?>
+                                         Repport of <?php echo date('m/Y', time()); ?>
                                     </h3>
                                 </div>
                                
                                 <div class="control-group" id="allowance">
 
 </div>
+<div class="module-body" style="text-align:left">
+                                <b> <h3 style="text-align:center;"> <?php
+                                     $userid = $_SESSION['id'];
+                                     $selectuserinfo = mysqli_query($conn, "SELECT * FROM users,salon WHERE users.SalonId = salon.SalonId AND users.UserId=$userid");
+                                     $info = mysqli_fetch_array($selectuserinfo);
+
+                                    ?></h3></b><br><br><br>
+
+                                <b>Dates</b>--------------<?php echo date('d-m-Y h:i:s A', time()); ?><br><br>
+                                <b>User</b>--------------<?php echo $info['FullName']; ?>
+
+                                <br><brr><br>
 <!-- <div class="container">
     <div class="span2">
         <div class="well">

@@ -47,6 +47,7 @@
 
 						</a>
 					</li>
+					
 				</ul>
 
 			<li>
@@ -140,9 +141,16 @@
 				<a class="collapsed" data-toggle="collapse" href="#togglefinance">
 					<i class="menu-icon icon-folder-close"></i>
 					<i class="icon-chevron-down pull-right"></i><i class="icon-chevron-up pull-right"></i>
-					Financial Statementtt
+					Financial Statement
 				</a>
 				<ul id="togglefinance" class="collapse unstyled">
+				<li>
+						<a href="income.php?mon=<?php echo date('m'); ?>">
+							<i class="icon-user"></i>
+							Income per employer
+							
+						</a>
+					</li>
 					<li>
 					<a href="managesallaries.php?mon=<?php echo date('m'); ?>">
 							<i class="icon-tasks"></i>

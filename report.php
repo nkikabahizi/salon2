@@ -144,7 +144,36 @@ if (strlen($_SESSION['alogin']) == 0) {
 											 ?>
                                              <tfoot>
 										     <tr>
-											  <td></td><td><b>Total Payouts</b></td><td><?php echo @$totaldeductions ." RWF"; ?></td></td><td><?php echo @$totalloans ." RWF"; ?></td></td><td><?php echo @$totalpayout ." RWF"; ?></td><td></td>
+											  <td></td><td><b>Total Payouts</b></td><td></td></td><td>
+                                                </td></td><td><?php echo @$totalpayout ." RWF"; ?></td><td></td>
+
+											  </tr>
+										     </tfoot>
+                                             <tfoot>
+										     <tr>
+											  <td></td><td><b>Reamaning loan</b></td><td></td></td><td>
+                                              <?php $selectloans = mysqli_query($conn, "select * from loans WHERE EmployeeId = $employeeid");
+														$totalloans=0;
+														while($loans = mysqli_fetch_array($selectloans))
+														{
+															$totalloans=$totalloans + $loans['Amount'];
+														}
+
+														echo $totalloans." RWF"; ?></td></td><td></td><td></td>
+
+											  </tr>
+										     </tfoot>
+                                             <tfoot>
+										     <tr>
+											  <td></td><td><b>Reamaning Deduction</b></td><td>	<?php $selectdeductions = mysqli_query($conn, "select * from deductions WHERE EmployeeId = $employeeid ");
+														$totaldeductions=0;
+														while($deductions = mysqli_fetch_array($selectdeductions))
+														{
+															$totaldeductions=$totaldeductions + $deductions['Amount'];
+														}
+
+														echo $totaldeductions." RWF"; ?></td></td><td>
+                                                </td></td><td></td><td></td>
 
 											  </tr>
 										     </tfoot>

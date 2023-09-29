@@ -46,6 +46,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 		<link rel="stylesheet" href="chosen.css">
 		<link rel="stylesheet" href="docsupport/prism.css">
 		<link rel="stylesheet" href="chosen.css">
+		<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+		<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
 
 		<script language="javascript" type="text/javascript">
 			var popUpWin = 0;
@@ -184,6 +186,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<th>Product</th>
 												<th>Unit price</th>
 												<th>Quantity</th>
+												<th>Total</th>
 												<th>Description</th>
 												<th>Purchase Dates</th>
 											</tr>
@@ -197,7 +200,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$total=0;
 											while ($row = mysqli_fetch_array($query)) {
 												$pid = $row['PurchaseId'];
-												$total=$row['UnitPrice'] + $total;
+												$subtotal = $row['UnitPrice'] * $row['Quantity'];
+										        @$totalpurchase = $totalpurchase + $subtotal;
+												@$total += $row['Quantity'];
 												?>
 												<tr>
 													<td>
@@ -210,7 +215,10 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<?php echo htmlentities($row['UnitPrice']) . "RWF"; ?>
 													</td>
 													<td>
-														<?php echo htmlentities($row['Quantity']); ?>
+														<?php echo htmlentities($row['Quantity']) ." QT"; ?>
+													</td>
+													<td>
+														<?php echo $subtotal; ?>
 													</td>
 													<td>
 														<?php echo htmlentities($row['Description']); ?>
@@ -223,15 +231,19 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<?php $cnt = $cnt + 1;
 											} ?>										
 										</tbody>
+										<tfoot>
+										<tr>
+											<td></td><td><b>Total sales purchase</b></td><td></td><td><?php echo @$total ." QT"; ?></td><td><?php echo @$totalpurchase ." RWF"; ?></td><td></td><td></td>
+
+											</tr>
+										</tfoot>
+										
 									</table>
-									<div class="module-head">
-									<h3>Total sales purchase______________ <?php echo $total." RWF"; ?></h3>
+									<a href="purchase-sales-report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>
 								</div>
-								</div>
+								
 							</div>
-
-
-
+							
 						</div><!--/.content-->
 					</div><!--/.span9-->
 				</div>

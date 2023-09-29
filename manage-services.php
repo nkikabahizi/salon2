@@ -119,10 +119,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 													required>
 													<option value="">Select Category</option>
 													<option value="Hair Dressing">Hair Dressing</option>
-													<option value="Nail dressing">Nail dressing</option>
-													<option value="Make up">Make up</option>
-													<option value="Face Massage">Face Massage</option>
-
+													<option value="Nail Dressing">Nail Dressing</option>
+													<option value="Make up specialist">Make up specialist</option>
 												</select>
 											</div>
 										</div>
