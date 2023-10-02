@@ -67,7 +67,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                 <br />
                                 <div>
-                                    <table>
+                                    <table >
                                         <h1>Tarrif</h1>
                                         <thead>
                                             <th>#</th>
@@ -81,7 +81,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                             <?php
                                             $salonid = $_SESSION['salonid'];
-                                            $query = mysqli_query($conn, "select * FROM products where SalonId = '$salonid' AND Status = 'In Stock' AND Quantity > 0");
+                                            $query = mysqli_query($conn, "SELECT * FROM products where SalonId = '$salonid' AND Status = 'In Stock' AND Quantity > 0");
                                             $cnt = 1;
                                             while ($row = mysqli_fetch_array($query)) {
                                                 $pid = $row['ProductId'];
@@ -91,7 +91,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                     <td>
 
                                                         <img src="productimages/<?php echo htmlentities($pid); ?>/<?php echo htmlentities($row['ExampleProfile']); ?>"
-                                                            width="60" height="50">
+                                                            width="10" height="10">
                                                     </td>
                                                     <td>
                                                         <?php echo $row['Name'] ?>
@@ -122,7 +122,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 
                                         <?php
-                                        $selectproducts = mysqli_query($conn, "SELECT * FROM products WHERE Status = 'In Stock' ");
+                                        $selectproducts = mysqli_query($conn, "SELECT * FROM products WHERE SalonId = '$salonid' AND Status = 'In Stock' ");
                                         while ($row = mysqli_fetch_array($selectproducts)) {
                                             $pid = $row['ProductId'];
                                             ?>

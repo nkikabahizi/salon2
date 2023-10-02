@@ -4,12 +4,13 @@ include('include/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
-	date_default_timezone_set('Asia/Kolkata'); // change according timezone
+	date_default_timezone_set('Africa/Kigali'); // change according timezone
 	$currentTime = date('d-m-Y h:i:s A', time());
 	$mon = $_GET['mon'];
-	$hairdresser = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Hair dresser' ");
-	$naildresser = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Nail dresser' ");
-	$makeup = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Make up specialist' ");
+	$salonid = $_SESSION['salonid'];
+	$hairdresser = mysqli_query($conn, "SELECT Amount,Mon FROM salaries,employees WHERE salaries.EmployeeId = employees.EmployeeId AND salaries.Status!=0 AND employees.SalonId = $salonid AND salaries.Mon = '$mon' AND employees.Poste = 'Hair dresser' ");
+	$naildresser = mysqli_query($conn, "SELECT Amount,Mon FROM salaries,employees WHERE salaries.EmployeeId = employees.EmployeeId AND salaries.Status!=0 AND employees.SalonId = $salonid AND salaries.Mon = '$mon' AND employees.Poste = 'Nail dresser' ");
+	$makeup = mysqli_query($conn, "SELECT Amount,Mon FROM salaries,employees WHERE salaries.EmployeeId = employees.EmployeeId AND salaries.Status!=0 AND employees.SalonId = $salonid AND salaries.Mon = '$mon' AND employees.Poste = 'Make up specialist' ");
 	$cnt = 1;
 	$totalhair = 0;
 	$totalmakeup = 0;
@@ -225,8 +226,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 											<center>
 												<div style="font-weight:bold">
 													<h5>
-														<?php while ($row3 = mysqli_fetch_array($naildresser)) {
-															@$totalmakeup = $totalnail + $row3['Amount'];
+														<?php while ($row3 = mysqli_fetch_array($makeup)) {
+															@$totalmakeup = $totalmakeup + $row3['Amount'];
 														}
 														echo $totalmakeup;
 														?>

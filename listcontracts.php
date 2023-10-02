@@ -120,7 +120,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         </thead>
                                         <tbody>
 
-                                            <?php $query = mysqli_query($conn, "select * from contracts,employees WHERE contracts.EmployeeId = employees.EmployeeId AND contracts.status = $statuss");
+                                            <?php $query = mysqli_query($conn, "SELECT * from contracts,employees WHERE contracts.EmployeeId = employees.EmployeeId AND employees.SalonId = $salonid AND  contracts.status = $statuss");
                                             $cnt = 1;
                                             while ($row = mysqli_fetch_array($query)) {
                                                 ?>

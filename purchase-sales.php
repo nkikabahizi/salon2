@@ -19,7 +19,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 			$newq = $cqty + $qty;
 			$keep = mysqli_query($conn, "insert into purchases(ProductId,Quantity,UnitPrice,Description,SalonId,Mon) values('$product','$qty', '$price', '$description', '$salonid','$mon')");
 			$change = mysqli_query($conn, "update products SET Quantity = '$newq' WHERE ProductId = '$product'");
-			if ($keep == 1) {
+			if ($keep == 0) {
 				header('location:purchase-sales.php');
 			} else {
 				echo mysqli_error($conn);
@@ -44,11 +44,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 		<link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
 			rel='stylesheet'>
 		<link rel="stylesheet" href="chosen.css">
-		<link rel="stylesheet" href="docsupport/prism.css">
-		<link rel="stylesheet" href="chosen.css">
+	
 		<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
 		<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
-
 		<script language="javascript" type="text/javascript">
 			var popUpWin = 0;
 			function popUpWindow(URLStr, left, top, width, height) {
@@ -92,7 +90,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											tabindex="4" name="products[]">
 
 											<?php
-											$selectproducts = mysqli_query($conn, "SELECT * FROM products WHERE Status = 'In Stock' ");
+											$selectproducts = mysqli_query($conn, "SELECT * FROM products WHERE SalonId = '$salonid' AND Status = 'In Stock' ");
 											while ($row = mysqli_fetch_array($selectproducts)) {
 												$pid = $row['ProductId'];
 												?>
@@ -127,7 +125,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$list = [];
 											foreach ($products as $products) {
 												array_push($list, $products);
-												$selectproducts = mysqli_query($conn, "SELECT Name,Quantity,Price,ProductId FROM products WHERE ProductId =$products");
+												$selectproducts = mysqli_query($conn, "SELECT Name,Quantity,Price,ProductId FROM products WHERE SalonId = '$salonid' AND ProductId =$products");
 												$row = mysqli_fetch_array($selectproducts);
 												$cnt = $cnt + 1;
 
@@ -195,7 +193,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 											<?php
 											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select purchases.Quantity,products.Name,Purchases.Description,purchases.UnitPrice,purchases.PurchaseId,purchases.PurchaseDates FROM purchases,products where products.ProductId=purchases.ProductId AND  purchases.SalonId = '$salonid' ORDER BY purchases.PurchaseId ");
+											$query = mysqli_query($conn, "SELECT purchases.Quantity,products.Name,Purchases.Description,purchases.UnitPrice,purchases.PurchaseId,purchases.PurchaseDates FROM purchases,products where products.ProductId=purchases.ProductId AND  purchases.salonId = $salonid AND products.salonId = $salonid ORDER BY purchases.PurchaseId ");
 											$cnt = 1;
 											$total=0;
 											while ($row = mysqli_fetch_array($query)) {

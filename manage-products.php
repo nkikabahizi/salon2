@@ -124,8 +124,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 													<option value="Oils">Oils</option>
 													<option value="Champo">Champo</option>
 													<option value="Make up">Make ups</option>
-
-
+													<option value="hair dresser">Hair Dresser</option>
+                                                    <option value="nair dresser">Nair Dresser</option>
 												</select>
 											</div>
 										</div>
@@ -285,6 +285,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									</table>
 									<a href="product-report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>
+									<h3><a href="purchase-sales-report.php?employeeid=<?php echo $employeeid; ?>&month=<?php echo $mon; ?>" target="_blank"> <button class="btn btn-primary" title="print report"><span class="icon-print"></span></button></a>Purchase sale</h3>
 								</div>
 							</div>
 

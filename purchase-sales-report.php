@@ -13,7 +13,7 @@ if (strlen($_SESSION['alogin']) == 0) {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>HDSMS|Purchase Sales</title>
+        <title>HDSMS|Purchase Sales Report</title>
         <link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -91,7 +91,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 											<?php
 											$salonid = $_SESSION['salonid'];
-											$query = mysqli_query($conn, "select purchases.Quantity,products.Name,Purchases.Description,purchases.UnitPrice,purchases.PurchaseId,purchases.PurchaseDates FROM purchases,products where products.ProductId=purchases.ProductId AND  purchases.SalonId = '$salonid' ORDER BY purchases.PurchaseId ");
+											$salonid = $_SESSION['salonid'];
+											$query = mysqli_query($conn, "SELECT purchases.Quantity,products.Name,Purchases.Description,purchases.UnitPrice,purchases.PurchaseId,purchases.PurchaseDates FROM purchases,products where products.ProductId=purchases.ProductId AND  purchases.salonId = $salonid AND products.salonId = $salonid ORDER BY purchases.PurchaseId ");
 											$cnt = 1;
 											$total=0;
 											while ($row = mysqli_fetch_array($query)) {

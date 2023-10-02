@@ -173,7 +173,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                             <?php
                                             $salonid = $_SESSION['salonid'];
-                                            $query = mysqli_query($conn, "select * from customers WHERE SalonId = '$salonid' AND Status != 0 ");
+                                            $query = mysqli_query($conn, "SELECT * from customers WHERE SalonId = '$salonid' AND Status != 0 ");
                                             $cnt = 1;
                                             while ($row = mysqli_fetch_array($query)) {
                                                 ?>

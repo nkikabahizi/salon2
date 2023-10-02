@@ -9,9 +9,10 @@ if (strlen($_SESSION['alogin']) == 0) {
     date_default_timezone_set('africa/cairo'); // change according timezone
 	$currentTime = date('d-m-Y h:i:s A', time());
 	$mon = $_GET['month'];
-	$hairdresser = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Hair dresser' ");
-	$naildresser = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Nail dresser' ");
-	$makeup = mysqli_query($conn, "SELECT Amount,Month FROM payroll,employees WHERE payroll.EmployeesNumber = employees.EmployeeId AND payroll.Month = '$mon' AND employees.Poste = 'Make up specialist' ");
+	$salonid = $_SESSION['salonid'];
+	$hairdresser = mysqli_query($conn, "SELECT Amount,Mon FROM salaries,employees WHERE salaries.EmployeeId = employees.EmployeeId AND salaries.Status!=0 AND employees.SalonId = $salonid AND salaries.Mon = '$mon' AND employees.Poste = 'Hair dresser' ");
+	$naildresser = mysqli_query($conn, "SELECT Amount,Mon FROM salaries,employees WHERE salaries.EmployeeId = employees.EmployeeId AND salaries.Status!=0 AND employees.SalonId = $salonid AND salaries.Mon = '$mon' AND employees.Poste = 'Nail dresser' ");
+	$makeup = mysqli_query($conn, "SELECT Amount,Mon FROM salaries,employees WHERE salaries.EmployeeId = employees.EmployeeId AND salaries.Status!=0 AND employees.SalonId = $salonid AND salaries.Mon = '$mon' AND employees.Poste = 'Make up specialist' ");
 	$cnt = 1;
 	$totalhair = 0;
 	$totalmakeup = 0;
@@ -25,7 +26,7 @@ if (strlen($_SESSION['alogin']) == 0) {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>HDSMS| Today's bills'</title>
+        <title>HDSMS| Wages Report</title>
         <link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -45,6 +46,53 @@ if (strlen($_SESSION['alogin']) == 0) {
     </head>
 
     <body>
+    <?php
+									$mon = $_GET['month'];
+									switch ($mon) {
+										case '1':
+											$monthname = 'January';
+											break;
+										case '2':
+											$monthname = 'February';
+											break;
+										case '3':
+											$monthname = 'March';
+											break;
+										case '4':
+											$monthname = 'April';
+											break;
+										case '5':
+											$monthname = 'May';
+											break;
+										case '6':
+											$monthname = 'June';
+											break;
+										case '7':
+											$monthname = 'July';
+											break;
+										case '8':
+											$monthname = 'August';
+											break;
+										case '9':
+											$monthname = 'September';
+											break;
+										case '10':
+											$monthname = 'October';
+											break;
+										case '11':
+											$monthname = 'November';
+											break;
+										case '12':
+											$monthname = 'December';
+											break;
+
+
+
+										default:
+											$mon = date('m');
+											break;
+									}
+									?>
         <?php
             $salonid=$_SESSION['salonid'];
             $query = mysqli_query($conn, "select * FROM salon WHERE SalonId= '$salonid' ");
@@ -128,8 +176,8 @@ if (strlen($_SESSION['alogin']) == 0) {
             <center>
                 <div style="font-weight:bold">
                     <h5>
-                        <?php while ($row3 = mysqli_fetch_array($naildresser)) {
-                            @$totalmakeup = $totalnail + $row3['Amount'];
+                        <?php while ($row3 = mysqli_fetch_array($makeup)) {
+                            @$totalmakeup = $totalmakeup + $row3['Amount'];
                         }
                         echo $totalmakeup;
                         ?>
@@ -181,7 +229,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$cnt = 1;
 											$totalexpense = 0;
 											while ($row = mysqli_fetch_array($selectexpenses)) {
-												$subtotall = $row['Amount'] + $row['Amount'];
+												$subtotall = $row['Amount'];
 												@$totalexpense = $totalexpense + $subtotall;
 											}
 											
@@ -199,7 +247,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<tr>
 
 										<td>
-											<?php echo $mon; ?>
+											<?php echo $monthname; ?>
 										</td>
 										<td>
 											<?php echo $totalpurchase; ?>
