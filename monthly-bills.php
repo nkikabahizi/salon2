@@ -5,7 +5,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
 
-
+	$totalproductss=0;
 	?>
 	<!DOCTYPE html>
 	<html lang="en">
@@ -13,7 +13,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>HDSMS| Today's bills'</title>
+		<title>HDSMS| Monthly's bills'</title>
 		<link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -136,7 +136,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 
 							<table cellpadding="0" cellspacing="0" border="0"
-								class="datatable-1 table table-bordered table-striped	 display table-responsive">
+										class="datatable-1 table table-bordered table-striped	 display" width="100%">
 								<thead>
 									<tr>
 										<th>#</th>
@@ -159,12 +159,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 									$mon = $_GET['mon'];
 									$total = 0;
+									$totalservicess = 0;
 									$salonid=$_SESSION['salonid'];
 									$query = mysqli_query($conn, "SELECT * FROM billing,customers,employees,services WHERE billing.ServiceId = services.ServiceId AND billing.CustomerId = customers.CustomerId AND billing.EmployeeId=employees.EmployeeId AND billing.Mon = $mon AND billing.Status!=0 AND billing.SalonId = $salonid  ORDER BY billing.BillingId DESC");
 									$cnt = 1;
 									while ($row = mysqli_fetch_array($query)) {
 										$billid = $row['BillingId'];
 										$servicefee = $row['ServiceFee'];
+										$totalservicess =$totalservicess+$servicefee;
 
 										?>
 										<tr>
@@ -220,14 +222,21 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 										<?php $cnt = $cnt + 1;
 												@$totalbill=$subprice + $totalbill;
+											 ?>
+											<?php $cnt = $cnt + 1;
+												$totalproductss=$totalproductss+$price;
 											} ?>
 									<tr>
 										<td><b>Total bills</b></td>
 										<td></td>
-										<td></td>
-										<td></td>
 										<td>
-											<?php echo "<b>" . @$totalbill ?>
+												<?php echo "<b>" . $totalservicess. ' FRW'; ?>
+												</td>
+												<td>
+												<?php echo "<b>" . $totalproductss. ' FRW'; ?>
+												</td>
+										<td>
+											<?php echo "<b>" . @$totalbill. ' FRW'; ?>
 										</td>
 										<td></td>
 										<td></td>

@@ -271,7 +271,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<th>Salaries & wages</th>
 										<th>Expense & Rent</th>
 										<th>Net Income</th>
-										<th> </th>
+									
 									</tr>
 								</thead>
 								<tbody>
@@ -326,11 +326,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 										<td>
 											<?php echo $netincome = $totalbilling - $totalpurchase - $totalsalaries - $totalexpense. "RWF"; ?>
 										</td>
-										<td>
 										
-											<a href="edit-category.php?id=<?php echo $row['PayId'] ?>"><i
-													class="icon-eye-open"></i></a>
-										</td>
 									</tr>
 
 								</tbody>

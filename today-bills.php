@@ -5,7 +5,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
 } else {
 
-
+	$totalproductss=0;
 
 
 	?>
@@ -86,6 +86,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											$day = date('d', time());
 											$totalservices = 0;
 											$totalbill = 0;
+											$totalservicess = 0;
 											$totalproducts = 0;
 											$salonid=$_SESSION['salonid'];
 											$query = mysqli_query($conn, "select * FROM billing,customers,employees,services WHERE billing.ServiceId = services.ServiceId AND billing.CustomerId = customers.CustomerId AND billing.EmployeeId=employees.EmployeeId AND billing.Day = $day AND billing.Status!=0 AND billing.SalonId = $salonid  ORDER BY billing.BillingId DESC");
@@ -93,6 +94,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											while ($row = mysqli_fetch_array($query)) {
 												$billid = $row['BillingId'];
 												$servicefee = $row['ServiceFee'];
+												$totalservicess =$totalservicess+$servicefee;
 
 												?>
 												<tr>
@@ -146,14 +148,17 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 												<?php $cnt = $cnt + 1;
 												$totalbill=$subprice + $totalbill;
+											 ?>
+											<?php $cnt = $cnt + 1;
+												$totalproductss=$totalproductss+$price;
 											} ?>
 											<tr>
 												<td><b>Total bills</b></td>
 												<td></td>
-												<td></td>
-												<td></td>
+												<td><?php echo "<b>" . $totalservicess. ' FRW'; ?></td>
+												<td><?php echo "<b>" . $totalproductss. ' FRW'; ?></td>
 												<td>
-													<?php echo "<b>" . @$totalbill; ?>
+													<?php echo "<b>" . @$totalbill.' FRW'; ?>
 												</td>
 												<td></td>
 												<td></td>
