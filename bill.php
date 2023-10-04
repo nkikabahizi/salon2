@@ -103,13 +103,15 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     }
                                     ?>
                                     <br><br>
-                                    <b>Price ----------</b>
+                                    <b>UnitPrice ----------</b>
                                     <?php echo $info['TotalProducts']. "RWF"; ?>
                                   <br><br>
-                                    
+                                  <b>Total Price of Product ----------</b>
+                                    <?php echo $totalproducts. "RWF"; ?>
+                                    <br><br>
                             
                                     <b>
-                                    Total Bill: <b>-----------------</b>      <?php echo "<b>" . $totalproducts + $info['ServiceFee'] . "RWF</b>"; ?><br><br>
+                                    Total Bill: <b>-----------------</b>      <?php echo "<b>" . $totalproducts + $info['ServiceFee'] . "RWF</b>"; ?><br>
                                         
                                     <b>----------------------------------------------------------------------------------------------</b>
 
@@ -119,12 +121,12 @@ if (strlen($_SESSION['alogin']) == 0) {
                                      $info = mysqli_fetch_array($selectuserinfo);
 
                                     ?>
-                                    <br><br>
+                                    <br>
                                     <p><i>Done at <?php echo $info['Location'] ?> <br>
                                     <?php echo "Operation Manager <b> ".$info['FullName']. "</b> At ". $info['Name']; ?>
                                     <br><br>
                                     Stamp and Signature .................................
-                                    <br><br>
+                                    <br>
                                     
                                     
 
